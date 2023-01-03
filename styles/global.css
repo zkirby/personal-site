@@ -5,3 +5,18 @@
 body {
     background-color: #fbf7eb;
 }
+
+a {
+    text-decoration: underline;
+}
+
+a:visited {
+    color: #073b4c;
+    opacity: 0.2;
+    font-weight: normal;
+}
+
+a:hover {
+    color: #118ab2;
+    opacity: 0.6;
+}

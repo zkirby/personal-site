@@ -1,10 +1,11 @@
+import Writings from "components/Writings";
 import Head from "next/head";
 import React from "react";
 import Description from "../components/Description";
 
 export default function Home({}) {
   return (
-    <div>
+    <div className="w-100 p-10">
       <Head>
         <title>Zachary Kirby</title>
         <meta
@@ -14,8 +15,13 @@ export default function Home({}) {
         <link rel="icon" href="../public/favicon/favicon.ico" />
       </Head>
 
-      <div className="m-0 w-1/2">
-        <Description />
+      <div className="flex m-auto w-3/4">
+        <div className="mr-40 basis-1/2">
+          <Description />
+        </div>
+        <div className="ml-40 basis-1/2">
+          <Writings />
+        </div>
       </div>
     </div>
   );
