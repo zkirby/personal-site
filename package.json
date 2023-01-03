@@ -1,7 +1,8 @@
 {
-  "name": "p",
+  "name": "personal-website",
   "version": "0.0.121",
   "dependencies": {
+    "@types/node": "^18.11.18",
     "autoprefixer": "^10.4.13",
     "next": "12.2.3",
     "postcss": "^8.4.20",
