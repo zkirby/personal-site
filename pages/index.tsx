@@ -15,7 +15,7 @@ export default function Home({}) {
         <link rel="icon" href="../public/favicon/favicon.ico" />
       </Head>
 
-      <div className="flex m-auto w-0.5">
+      <div className="flex m-auto w-1/2">
         {/* <div className="basis-1/2"> */}
         <Description />
         {/* </div> */}
