@@ -1,4 +1,4 @@
-import Writings from "components/Writings";
+// import Writings from "components/Writings";
 import Head from "next/head";
 import React from "react";
 import Description from "../components/Description";
@@ -15,13 +15,13 @@ export default function Home({}) {
         <link rel="icon" href="../public/favicon/favicon.ico" />
       </Head>
 
-      <div className="flex m-auto w-3/4">
-        <div className="mr-40 basis-1/2">
-          <Description />
-        </div>
-        <div className="ml-40 basis-1/2">
-          <Writings />
-        </div>
+      <div className="flex m-auto w-0.5">
+        {/* <div className="basis-1/2"> */}
+        <Description />
+        {/* </div> */}
+        {/* <div className="ml-40 basis-1/2"> */}
+        {/* <Writings /> */}
+        {/* </div> */}
       </div>
     </div>
   );
