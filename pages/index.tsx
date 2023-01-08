@@ -15,13 +15,13 @@ export default function Home({}) {
         <link rel="icon" href="../public/favicon/favicon.ico" />
       </Head>
 
-      <div className="flex m-auto w-3/4">
-        <div className="mr-40 basis-1/2">
-          <Description />
-        </div>
-        <div className="ml-40 basis-1/2">
-          <Writings />
-        </div>
+      <div className="flex m-auto w-1/2">
+        {/* <div className="basis-1/2"> */}
+        <Description />
+        {/* </div> */}
+        {/* <div className="ml-40 basis-1/2"> */}
+        {/* <Writings /> */}
+        {/* </div> */}
       </div>
     </div>
   );

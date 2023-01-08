@@ -517,10 +517,6 @@ video {
   margin: auto;
 }
 
-.mr-40 {
-  margin-right: 10rem;
-}
-
 .ml-40 {
   margin-left: 10rem;
 }
@@ -541,20 +537,20 @@ video {
   margin-bottom: 1.5rem;
 }
 
-.mt-3 {
-  margin-top: 0.75rem;
-}
-
-.block {
-  display: block;
-}
-
 .flex {
   display: flex;
 }
 
-.w-3\/4 {
-  width: 75%;
+.w-0\.5 {
+  width: 0.125rem;
+}
+
+.w-0 {
+  width: 0px;
+}
+
+.w-1\/2 {
+  width: 50%;
 }
 
 .basis-1\/2 {
@@ -589,11 +585,8 @@ video {
   line-height: 1.75rem;
 }
 
-.italic {
-  font-style: italic;
-}
-
-.filter {
+.blur {
+  --tw-blur: blur(8px);
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
