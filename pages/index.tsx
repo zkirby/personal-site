@@ -1,4 +1,4 @@
-// import Writings from "components/Writings";
+import Writings from "components/posts/Writings";
 import Head from "next/head";
 import React from "react";
 import Description from "../components/Description";
