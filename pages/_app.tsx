@@ -12,24 +12,24 @@ function MyApp({ Component, pageProps }) {
           name="description"
           content="The personal website of Zachary Kirby"
         />
-        <link rel="icon" href="../public/favicon/favicon.ico" />
-        <link rel="shortcut icon" href="../public/favicon/favicon.ico" />
+        <link rel="icon" href="/image/favicon.ico" />
+        <link rel="shortcut icon" href="/image/favicon.ico" />
         <link
           rel="apple-touch-icon"
           sizes="180x180"
-          href="../public/favicon/apple-touch-icon.png"
+          href="/image/apple-touch-icon.png"
         />
         <link
           rel="icon"
           type="image/png"
           sizes="32x32"
-          href="../public/favicon/favicon-32x32.png"
+          href="/image/favicon-32x32.png"
         />
         <link
           rel="icon"
           type="image/png"
           sizes="16x16"
-          href="../public/favicon/favicon-16x16.png"
+          href="/image/favicon-16x16.png"
         />
       </Head>
       <Component {...pageProps} />
