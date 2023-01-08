@@ -15,6 +15,17 @@ h1 {
     font-weight: 700;
 }
 
+h2 { 
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+
 a:visited {
     color: #073b4c;
     opacity: 0.2;

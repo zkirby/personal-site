@@ -18,7 +18,7 @@ const Renderer = ({ blocks }) => (
       const Component = TYPE_TO_COMPONENT[block.type];
 
       return (
-        <Component key={block.id}>
+        <Component key={block.id} className="mb-3">
           {map(block.text, (text) => (
             <Text key={`${block.id}-${text.plain_text}`} text={text} />
           ))}

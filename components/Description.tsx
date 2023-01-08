@@ -6,14 +6,9 @@ import self from "../public/self.jpg";
 export default function Description() {
   return (
     <div>
-      <a href="http://cathleenmjia.com/">
+      <a href="http://cathleenmjia.com/" className="m-auto">
         {/* Use img tag since bun polyfills the next Image component anyway */}
-        <Image
-          className="object-cover object-top m-auto"
-          height="300"
-          width="300"
-          src={self}
-        />
+        <Image height="300" width="300" src={self} />
       </a>
       <h1 className="text-4xl">Zachary Kirby</h1>
       <p className="mt-6 text-xl">
