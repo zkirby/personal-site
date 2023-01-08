@@ -5,7 +5,7 @@ import { transFormApiPost } from "./get-posts";
 
 function transformApiPostContent(content) {
   return map(content, (block) => {
-    const allText = get(block, [block.type, "text"], []);
+    const allText = get(block, [block.type, "rich_text"], []);
     return {
       ...pick(block, ["id", "type"]),
       text: map(allText, (text) => ({

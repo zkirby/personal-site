@@ -12,7 +12,7 @@ const Writings = () => {
   return (
     <SkeletonLoading status={status} skeleton={<SkeletonAllPosts />}>
       {summaries.map((post) => (
-        <Link key={post.id} className="clear-style" href={`/entry/${post.id}`}>
+        <Link key={post.id} className="clear-style" href={`/post/${post.id}`}>
           <h5>{post.title}</h5>
         </Link>
       ))}

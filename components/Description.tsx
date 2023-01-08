@@ -1,15 +1,18 @@
 import React from "react";
+import Image from "next/image";
+
+import self from "../public/self.jpg";
 
 export default function Description() {
   return (
     <div>
       <a href="http://cathleenmjia.com/">
         {/* Use img tag since bun polyfills the next Image component anyway */}
-        <img
+        <Image
           className="object-cover object-top m-auto"
           height="300"
           width="300"
-          src={"../public/self.jpg"}
+          src={self}
         />
       </a>
       <h1 className="text-4xl">Zachary Kirby</h1>

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import React from "react";
+import React, { useMemo } from "react";
 import { FaHome } from "react-icons/fa";
 
 import Renderer from "./markdown/Renderer";
@@ -11,6 +11,8 @@ import SkeletonPost from "./skeletons/SkeletonPost";
 const Post = ({ postId }) => {
   const [post, status] = useAsyncLoadState(() => getPost(postId));
 
+  const body = useMemo(() => post?.body ?? {}, [post]);
+
   return (
     <SkeletonLoading status={status} skeleton={<SkeletonPost />}>
       <div>
@@ -18,8 +20,8 @@ const Post = ({ postId }) => {
           <FaHome />
         </Link>
         <div>
-          <h1>{post?.title}</h1>
-          <Renderer blocks={post?.content} />
+          <h1>{body.title}</h1>
+          <Renderer blocks={body.content} />
         </div>
       </div>
     </SkeletonLoading>

@@ -6,7 +6,6 @@ const _cache = {};
 async function withCache(cb, key) {
   if (!(key in _cache)) {
     _cache[key] = await cb();
-    console.log(_cache[key]);
   }
 
   return _cache[key];
