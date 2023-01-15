@@ -6,6 +6,7 @@
     "@types/node": "^18.11.18",
     "@vercel/analytics": "^0.1.6",
     "autoprefixer": "^10.4.13",
+    "date-fns": "^2.29.3",
     "ky": "^0.33.1",
     "lodash": "^4.17.21",
     "next": "^12.2.3",

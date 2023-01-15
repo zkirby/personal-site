@@ -11,7 +11,14 @@ async function withCache(cb, key) {
   return _cache[key];
 }
 
-export function getAllPostSummaries() {
+interface Post {
+  id: string;
+  title: string;
+  created_time: string;
+  last_edited_time: string;
+}
+
+export function getAllPostSummaries(): Promise<Post[]> {
   return withCache(api.get("/api/get-posts").json, "allPostSummaries");
 }
 

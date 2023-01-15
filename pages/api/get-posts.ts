@@ -8,6 +8,8 @@ export const transFormApiPost = (post) => {
   return {
     ...pick(post, ["id", "created_time", "last_edited_time"]),
     title: get(post, `properties.Name.title.0.plain_text`),
+    summary: get(post, `properties.Summary.rich_text.0.plain_text`),
+    tags: get(post, `properties.Tags.multi_select`, []),
   };
 };
 

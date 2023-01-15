@@ -1,6 +1,15 @@
 import { useState } from "react";
 
-export default function useAsyncCall(asyncLoadFn, initialState) {
+interface Status {
+  loading: boolean;
+  isLoaded: boolean;
+  error: string | null;
+}
+
+export default function useAsyncCall<U extends (...any: any[]) => Promise<any>>(
+  asyncLoadFn: U,
+  initialState
+): [ReturnType<U>, Status, any, any] {
   const baseStatus = {
     loading: false,
     isLoaded: false,
