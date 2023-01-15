@@ -19,7 +19,7 @@ const Post = ({ postId }) => {
         <Link href="/">
           <FaHome className="text-xl fixed top-5 left-8 cursor-pointer" />
         </Link>
-        <div className="py-10 px-64">
+        <div className="py-10 px-80">
           <h1 className="mb-5">{body.title}</h1>
           <div className="text-lg leading-6">
             <Renderer blocks={body.content} />

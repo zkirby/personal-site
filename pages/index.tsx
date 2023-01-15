@@ -8,8 +8,8 @@ export default function Home({}) {
       <div className="flex m-auto w-1/2">
         {/* <div className="basis-1/2"> */}
         <Description />
-        {/* </div> */}
-        {/* <div className="ml-40 basis-1/2">
+        {/* </div>
+        <div className="ml-40 basis-1/2">
           <Writings />
         </div> */}
       </div>
