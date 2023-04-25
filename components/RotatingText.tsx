@@ -24,7 +24,7 @@ const RotatingText = ({ textList }) => {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <p className="absolute bottom-0 w-full text-center text-4xl font-bold text-white">
+          <p className="absolute bottom-0 w-full text-center text-4xl font-bol">
             {text}
           </p>
         </Transition>
