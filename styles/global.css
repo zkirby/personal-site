@@ -1,42 +1,26 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-body {
-    background-color: #fbf7eb;
-}
-
-a {
-    text-decoration: underline;
-}
-
-h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-}
-
-h2 { 
-    font-size: 2rem;
-    font-weight: 700;
-}
-
-h3 {
-    font-size: 1.5rem;
-    font-weight: 700;
-}
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 
 
-a:visited {
-    color: #073b4c;
-    opacity: 0.2;
-    font-weight: normal;
-}
+.highlight {
+    position: relative;
+    color: #000;
+    text-decoration: none;
+  }
 
-a:hover {
-    color: #118ab2;
-    opacity: 0.6;
-}
-
-li {
-    padding-left: 1em;
-}
+.highlight::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    width: 100%;
+    height: 25%; /* covers the bottom 3/4 of the text */
+    left: 0;
+    bottom: 3px;
+    background-color: #D86D77; /* change this to your preferred highlight color */
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .highlight:hover::after {
+    height: 90%;
+  }
