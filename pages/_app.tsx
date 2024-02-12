@@ -2,6 +2,13 @@ import { Analytics } from "@vercel/analytics/react";
 import Head from "next/head";
 import "../styles/global.css";
 
+import localFont from 'next/font/local'
+
+const typewriterFont = localFont({
+  src: '../public/fonts/typewriter/JMHTypewriter-Bold.woff',
+  variable: "--font-typewriter"
+})
+
 function MyApp({ Component, pageProps }) {
   return (
     <>
@@ -41,7 +48,7 @@ function MyApp({ Component, pageProps }) {
           href="/image/favicon-16x16.png"
         />
       </Head>
-      <Component {...pageProps} />
+      <main className={typewriterFont.variable}><Component {...pageProps} /></main>
       <Analytics />
     </>
   );

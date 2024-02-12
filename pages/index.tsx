@@ -1,6 +1,5 @@
-import React from "react";
 import Home from "../views/Home";
 
-export default function Root({}) {
+export default function Root({ }) {
   return <Home />;
 }

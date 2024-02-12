@@ -5,7 +5,7 @@ module.exports = {
   theme: {
     fontFamily: {
       serif: ["Playfair Display"],
-      sans: ["'Source Sans 3'"],
+      sans: ["var(--font-typewriter)"],
     },
     extend: {
       colors: {

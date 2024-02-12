@@ -3,16 +3,17 @@ import { FaLinkedinIn } from "react-icons/fa";
 import { AiOutlineMail } from "react-icons/ai";
 import { BiPencil } from "react-icons/bi";
 
-export default function Home({}) {
+
+export default function Home({ }) {
   return (
     <div className="p-10">
       <div className="m-auto w-7/12 flex justify-center">
+        {/* NOTE: I really like this picture but I'm not sure it really works with the current typewriter style */}
         {/* <div className="mr-6 relative bottom-2">
           <Image height="400" width="400" src={self} />
         </div> */}
         <div>
-          <div className="flex items-baseline">
-            <h1 className="text-4xl font-serif">Zach Kirby</h1>
+          {/* <div className="flex items-baseline">
             <a className="ml-3" href="mailto:zach@zkirby.com" target="_blank">
               <AiOutlineMail size={20} />
             </a>
@@ -30,7 +31,7 @@ export default function Home({}) {
             >
               <FaLinkedinIn size={20} />
             </a>
-          </div>
+          </div> */}
           <div className="text-left font-sans">
             <p className="mt-6 text-xl">
               Hi there, my name is Zach. I'm a Berkeley grad and former software
