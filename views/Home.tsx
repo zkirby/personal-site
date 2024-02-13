@@ -34,11 +34,10 @@ export default function Home({ }) {
           </div> */}
           <div className="text-left font-sans">
             <p className="mt-4 text-xl">
-              Hi there, my name is Zach. I'm a Berkeley grad and former software
-              engineer turned founder living in San Francisco.
+              Hi there.
             </p>
             <p className="mt-4 text-xl">
-              Currently, I'm the co-founder of{" "}
+              Recently, I was the co-founder of{" "}
               <a
                 className="highlight "
                 target="_blank"
@@ -46,43 +45,24 @@ export default function Home({ }) {
               >
                 Vessel
               </a>
-              , a YC/venture backed startup focused on making it quick and easy
-              to add user-facing integrations to SaaS products.
+              , a YC/venture backed startup with the tag line "We make it quick and easy
+              to add user-facing integrations to your SaaS product". It was the most interesting thing I've done in my (short) career so far. It was full of ups and downs and some lefts and one right... but that's a story for another time.
+            </p>
+            <p>Before Vessel, I was a front end developer for a few years and even taught a web design class at Berkeley. [...]</p>
+            <p className="mt-4 text-xl">
+              I don't think most people enjoy being defined by their career, and I'm no exception.
             </p>
             <p className="mt-4 text-xl">
-              As most founders know, it's rare to have any substantial amount of
-              free time in this line of work. But when I do have time, I usually
-              spend it in nature or doing some form of reading,{" "}
-              <a
-                className="highlight"
-                target="_blank"
-                href="https://substack.com/@zkirby"
-              >
-                writing
-              </a>
-              , or partaking in my second passion: film.
-            </p>
-            <p className="mt-4 text-xl">
-              I have a general distaste for social media of any kind (including
-              Twitter/Instagram/Reddit/etc) and tend not to use it. I do,
+              I have a general distaste for social media of any kind. Not in a snobbish I'm Better Than You way, [...]. I do,
               however, love to connect and exchange ideas with other people and
-              will respond to most (relevant) emails and LinkedIn requests.
+              will respond to most (relevant) emails. You can contact me about anything, assuming it isn't an
+              unnecessary solicitation.
             </p>
             <p className="mt-4 text-xl">
-              You can contact me about anything (assuming it isn't an
-              unnecessary solicitation), but right now I most enjoy{" "}
-              <a
-                className="highlight"
-                target="_blank"
-                href="https://substack.com/notes"
-              >
-                discussing
-              </a>
-              : the role of human behavior in entrepreneurship, the evolution of
-              communication caused by AI, and the role of technology in American
-              culture issues such as the loneliness epidemic.
+              As for what I'm up to right now, I don't have a concrete answer. I'm
             </p>
             <p className="text-xl mt-4 text-red-700">- Zachary Kirby</p>
+            <p className="text-l mt-2 ml-2">p.s. check out my writings, my code, or my </p>
           </div>
         </div>
       </div>
