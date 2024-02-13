@@ -6,8 +6,8 @@ import { BiPencil } from "react-icons/bi";
 
 export default function Home({ }) {
   return (
-    <div className="p-10">
-      <div className="m-auto w-7/12 flex justify-center">
+    <div className="p-10 ">
+      <div className="m-auto w-[800px] flex justify-center">
         {/* NOTE: I really like this picture but I'm not sure it really works with the current typewriter style */}
         {/* <div className="mr-6 relative bottom-2">
           <Image height="400" width="400" src={self} />
@@ -33,7 +33,7 @@ export default function Home({ }) {
             </a>
           </div> */}
           <div className="text-left font-sans">
-            <p className="mt-6 text-xl">
+            <p className="mt-4 text-xl">
               Hi there, my name is Zach. I'm a Berkeley grad and former software
               engineer turned founder living in San Francisco.
             </p>
@@ -82,6 +82,7 @@ export default function Home({ }) {
               communication caused by AI, and the role of technology in American
               culture issues such as the loneliness epidemic.
             </p>
+            <p className="text-xl mt-4 text-red-700">- Zachary Kirby</p>
           </div>
         </div>
       </div>
