@@ -48,21 +48,25 @@ export default function Home({ }) {
               , a YC/venture backed startup with the tag line "We make it quick and easy
               to add user-facing integrations to your SaaS product". It was the most interesting thing I've done in my (short) career so far. It was full of ups and downs and some lefts and one right... but that's a story for another time.
             </p>
-            <p>Before Vessel, I was a front end developer for a few years and even taught a web design class at Berkeley. [...]</p>
-            <p className="mt-4 text-xl">
+            {/* <p>Before Vessel, I was a front end developer for a few years and even taught a web design class at Berkeley.</p> */}
+            {/* <p className="mt-4 text-xl">
               I don't think most people enjoy being defined by their career, and I'm no exception.
-            </p>
+            </p> */}
             <p className="mt-4 text-xl">
-              I have a general distaste for social media of any kind. Not in a snobbish I'm Better Than You way, [...]. I do,
+              I have a general distaste for social media of any kind. I do,
               however, love to connect and exchange ideas with other people and
               will respond to most (relevant) emails. You can contact me about anything, assuming it isn't an
               unnecessary solicitation.
             </p>
-            <p className="mt-4 text-xl">
+            {/* <p className="mt-4 text-xl">
               As for what I'm up to right now, I don't have a concrete answer. I'm
-            </p>
+            </p> */}
             <p className="text-xl mt-4 text-red-700">- Zachary Kirby</p>
-            <p className="text-l mt-2 ml-2">p.s. check out my writings, my code, or my </p>
+            <p className="text-l mt-2">p.s. check out my{" "}
+              <a className="text-bold" href="https://substack.com/@zkirby" target="_blank">
+                writings
+              </a>
+            </p>
           </div>
         </div>
       </div>
