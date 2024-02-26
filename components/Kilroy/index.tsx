@@ -132,6 +132,7 @@ function Scene() {
 
 /**
  * TODO: Add eye close animation over the bounding boxes of the non-black text. (can probably just do this with a global 'on mouse over' event)
+ * TODO: Prevent the canvas from shrinking when the height changes.
  * TODO: General code clean up and launch
  *  - experiment with different laser shapes
  *  - push lasers forward a little so they don't peak out of the back of the eyes
