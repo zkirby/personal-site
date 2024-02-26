@@ -33,3 +33,18 @@ body {
 .highlight:hover::after {
   height: 90%;
 }
+
+/* -------------------------------- */
+/* WebGl Scene */
+.three-scene {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+}
+
+canvas {
+  display: block;
+  z-index: -1;
+  border: none;
+  pointer-events: none;
+}

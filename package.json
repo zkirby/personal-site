@@ -3,6 +3,7 @@
   "version": "0.0.121",
   "dependencies": {
     "@headlessui/react": "^1.7.14",
+    "@react-three/fiber": "^8.15.16",
     "@types/node": "^18.11.18",
     "@vercel/analytics": "^0.1.6",
     "autoprefixer": "^10.4.13",
@@ -17,7 +18,9 @@
     "react-dom": "^18",
     "react-icons": "^4.10.1",
     "react-is": "^18",
-    "tailwindcss": "^3.2.4"
+    "tailwindcss": "^3.2.4",
+    "three": "^0.161.0",
+    "three-stdlib": "^2.29.4"
   },
   "devDependencies": {
     "@types/react": "^18",
