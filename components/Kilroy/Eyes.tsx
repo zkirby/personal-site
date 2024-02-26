@@ -146,7 +146,7 @@ function Scene() {
     })
 
     // Load the kilroy background.
-    const kilroy = useLoader(TextureLoader, './kt.png')
+    const kilroy = useLoader(TextureLoader, './kilroy.png')
 
 
     useFrame((_, d) => {
@@ -203,7 +203,7 @@ function Scene() {
 
 /**
  * 
- * TODO: Add eye close animation over the bounding boxes of the non-black text.
+ * TODO: Add eye close animation over the bounding boxes of the non-black text. (can probably just do this with a global 'on mouse over' event)
  * TODO: Finish adding sound toggle (will need global state)
  * TODO: General code clean up and launch
  * 
