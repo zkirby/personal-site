@@ -133,6 +133,8 @@ function Scene() {
 /**
  * TODO: Add eye close animation over the bounding boxes of the non-black text. (can probably just do this with a global 'on mouse over' event)
  * TODO: General code clean up and launch
+ *  - experiment with different laser shapes
+ *  - push lasers forward a little so they don't peak out of the back of the eyes
  *
  * IDEA: Change the black cutouts to not just be squares
  * IDEA: Add explosion animation when the lasers hit their target
