@@ -85,7 +85,7 @@ function Scene() {
         const direction = new THREE.Vector3();
         direction.subVectors(laser.destination, beam.position);
         direction.normalize();
-        beam.position.addScaledVector(direction, d * 20);
+        beam.position.addScaledVector(direction, d * 25);
       });
 
       // Remove the beams once they reach their destination
