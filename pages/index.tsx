@@ -1,13 +1,14 @@
-import Home from "../views/Home";
-import Kilroy from "../views/Kilroy";
-import Eyes from '../views/webgl/Eyes';
+import Home from "../components/Home";
+import Kilroy from "../components/Kilroy";
+import Eyes from '../components/Eyes';
 
 export default function Root() {
   return (
-    <div className="">
+    <div >
       <Home />
-      <Eyes />
-      <div className="w-[400px] h-[190px] flex m-auto"><Kilroy /></div>
+      {/* TODO: allow for mobile eye tracking*/}
+      <div className="hidden md:block"><Eyes /></div>
+      <div className="hidden md:flex w-[400px] h-[190px] m-auto"><Kilroy /></div>
     </div>
   );
 }

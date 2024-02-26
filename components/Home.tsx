@@ -1,5 +1,4 @@
 import React from "react";
-import Kilroy from "./Kilroy";
 
 export default function Home({ }) {
   return (
@@ -10,18 +9,6 @@ export default function Home({ }) {
           <Image height="400" width="400" src={self} />
         </div> */}
         <div>
-          {/* <div className="flex items-baseline">
-            <a className="ml-3" href="mailto:zach@zkirby.com" target="_blank">
-              <AiOutlineMail size={20} />
-            </a>
-            <a
-              className="ml-1"
-              href="https://www.linkedin.com/in/zkirby"
-              target="_blank"
-            >
-              <FaLinkedinIn size={20} />
-            </a>
-          </div> */}
           <div className="text-left font-sans">
             <p className="mt-4 text-xl">
               Hi there.
@@ -47,19 +34,12 @@ export default function Home({ }) {
               , a YC/venture backed startup with the tag line "We make it quick and easy
               to add user-facing integrations to your SaaS product". It was the most interesting thing I've done in my (short) career so far. It was full of ups and downs and some lefts and one right... but that's a story for another time.
             </p>
-            {/* <p>Before Vessel, I was a front end developer for a few years and even taught a web design class at Berkeley.</p> */}
-            {/* <p className="mt-4 text-xl">
-              I don't think most people enjoy being defined by their career, and I'm no exception.
-            </p> */}
             <p className="mt-4 text-xl">
               I have a general distaste for social media of any kind. I do,
               however, love to connect and exchange ideas with other people and
-              will respond to most (relevant) emails. You can <a className="highlight" href="mailto:zach@zkirby.com" target="_blank">contact me</a> about anything, assuming it isn't an
+              will respond to most (relevant) emails. You can <a className="highlight" href="mailto:zach@zkirby.com" target="_blank">contact</a> me about anything, assuming it isn't an
               unnecessary solicitation.
             </p>
-            {/* <p className="mt-4 text-xl">
-              As for what I'm up to right now, I don't have a concrete answer. I'm
-            </p> */}
             <p className="text-xl mt-4 text-red-700">- Zachary Kirby</p>
           </div>
         </div>
