@@ -1,7 +1,9 @@
-import { Canvas, useThree } from '@react-three/fiber'
-import { useEffect, useRef } from 'react'
+import { Canvas, useLoader, useThree } from '@react-three/fiber'
+import { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
 import useMousePosition from '../hooks/useMousePosition'
+import { TextureLoader } from 'three/src/loaders/TextureLoader'
+
 
 function Pupil() {
     return (
@@ -10,7 +12,7 @@ function Pupil() {
             <meshToonMaterial color="black" />
             <mesh position={[0.05, 0.05, 0.15]}>
                 <sphereGeometry args={[0.05, 32, 32]} />
-                <meshToonMaterial color="white" />
+                <meshToonMaterial />
             </mesh>
         </mesh>
     )
@@ -45,29 +47,40 @@ function Eye(props) {
     return (
         <mesh position={props.position} ref={eyeRef}>
             <sphereGeometry args={[0.4, 32, 32]} />
-            <meshToonMaterial />
+            <meshBasicMaterial color="#e8e8e8" />
             <Pupil />
         </mesh>
     )
 }
 
-
-
-
-export default function Eyes() {
+function Scene() {
     // We have to use a global event handler rather than 
     // the one supplied by the canvas or the eyes won't
     // track when we mouse over the text body (which sits
     // on top of the canvas).
     const coords = useMousePosition()
 
+    const kilroy = useLoader(TextureLoader, './kilroy.png')
+
+    return <>
+        <ambientLight intensity={Math.PI} />
+        <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} decay={0} intensity={Math.PI} />
+        <pointLight position={[-10, -10, -10]} decay={0} intensity={Math.PI} />
+        <mesh position={[0, 5.85, 0]} >
+            <planeGeometry args={[6.6, 2.9]} />
+            <meshStandardMaterial map={kilroy} transparent={true} />
+            <Eye coords={coords} position={[-0.7, 0.7, 0]} />
+            <Eye coords={coords} position={[0.2, 0.7, 0]} />
+        </mesh>
+    </>
+}
+
+
+
+export default function Kilroy() {
     return (
-        <Canvas className='three-scene' camera={{ position: [0, 0, 10] }}>
-            <ambientLight intensity={Math.PI / 2} />
-            <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} decay={0} intensity={Math.PI} />
-            <pointLight position={[-10, -10, -10]} decay={0} intensity={Math.PI} />
-            <Eye coords={coords} position={[-0.9, 6.3, 0]} />
-            <Eye coords={coords} position={[0.2, 6.3, 0]} />
+        <Canvas flat className='three-scene' camera={{ position: [0, 0, 10] }}>
+            <Scene />
         </Canvas >
     )
 }

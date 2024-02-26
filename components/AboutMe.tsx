@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Home({ }) {
+export default function AboutMe({ }) {
   return (
     <div className="p-10 fixed w-full top-[140px] z-10">
       <div className="m-auto w-[800px] flex justify-center">
