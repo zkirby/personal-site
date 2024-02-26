@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
  *
  * @source https://www.joshwcomeau.com/snippets/react-hooks/use-mouse-position/
  */
-const useMousePosition = () => {
+const useGlobalMousePosition = () => {
   const [mousePosition, setMousePosition] = useState({
     x: null,
     y: null,
@@ -26,4 +26,4 @@ const useMousePosition = () => {
   return mousePosition;
 };
 
-export default useMousePosition;
+export default useGlobalMousePosition;
