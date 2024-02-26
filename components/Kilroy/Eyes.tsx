@@ -146,7 +146,7 @@ function Scene() {
     })
 
     // Load the kilroy background.
-    const kilroy = useLoader(TextureLoader, './kilroy.png')
+    const kilroy = useLoader(TextureLoader, './kt.png')
 
 
     useFrame((_, d) => {
@@ -190,11 +190,11 @@ function Scene() {
             <ambientLight intensity={Math.PI} />
 
             {/* Eyes */}
-            <mesh position={[0, 5.85, 0]} >
-                <planeGeometry args={[6.6, 2.9]} />
+            <mesh position={[0, 5.5, 0]} >
+                <planeGeometry args={[7.92, 3.48]} />
                 <meshStandardMaterial map={kilroy} transparent={true} />
-                <Eye coords={coords} position={[-0.7, 0.7, 0]} ref={leftEyeRef} />
-                <Eye coords={coords} position={[0.2, 0.7, 0]} ref={rightEyeRef} />
+                <Eye coords={coords} position={[-0.75, 0.75, 0]} ref={leftEyeRef} />
+                <Eye coords={coords} position={[0.15, 0.75, 0]} ref={rightEyeRef} />
             </mesh>
         </>
     )
@@ -203,7 +203,6 @@ function Scene() {
 
 /**
  * 
- * TODO: Improve resolution of the kilroy texture and re-position the eyes
  * TODO: Add eye close animation over the bounding boxes of the non-black text.
  * TODO: Finish adding sound toggle (will need global state)
  * TODO: General code clean up and launch
