@@ -1,3 +1,3 @@
 import { atom } from "jotai";
 
-export const soundEnabledAtom = atom(false);
+export const soundEnabledAtom = atom(true);

@@ -1,5 +1,5 @@
 import { useAtom } from 'jotai';
-import { BiSolidVolume, BiSolidVolumeMute } from 'react-icons/bi';
+import { BiSolidVolumeLow, BiSolidVolumeMute } from 'react-icons/bi';
 import { soundEnabledAtom } from '../state/sound.atoms';
 
 
@@ -11,10 +11,11 @@ export default function SoundEnabled() {
             <button
                 onClick={(e) => {
                     setSoundEnabled(!soundEnabled)
+                    e.stopPropagation()
                 }}
                 className="text-red-700 p-2 text-2xl"
             >
-                {soundEnabled ? <BiSolidVolume /> : <BiSolidVolumeMute />}
+                {soundEnabled ? <BiSolidVolumeLow /> : <BiSolidVolumeMute />}
             </button>
         </div>
     );
