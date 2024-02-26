@@ -4,6 +4,7 @@ import * as THREE from 'three'
 import useGlobalMousePosition from '../../hooks/useGlobalMousePosition'
 import { TextureLoader } from 'three/src/loaders/TextureLoader'
 import useGlobalMouseDown from '../../hooks/useGlobalMouseDown'
+import useSoundEnabled from '../../hooks/useSoundEnabled'
 
 function windowToCanvasVector({ x, y }: { x: number, y: number }, camera: THREE.Camera) {
     // Create parallel plain to the canvas, this will allow 
@@ -72,8 +73,29 @@ function Scene() {
     // or change everything over to native threejs.
     const [beams, setBeams] = useState([])
     const { camera, scene } = useThree()
+    const [soundEnabled] = useSoundEnabled()
 
-    // Eye
+    const listener = new THREE.AudioListener();
+    camera.add(listener);
+
+    // create a global audio source
+    const laserSound = new THREE.Audio(listener);
+
+    // load a sound and set it as the Audio object's buffer
+    const audioLoader = new THREE.AudioLoader();
+    // Sound courtesy of https://pixabay.com/users/pixabay-1/
+    audioLoader.load('./blaster.mp3', (buffer) => {
+        laserSound.setBuffer(buffer)
+        laserSound.setVolume(0.2)
+        laserSound.duration = 0.4
+    });
+
+    useEffect(() => {
+        laserSound.setVolume(soundEnabled ? 0.2 : 0)
+        console.log(soundEnabled)
+    }, [soundEnabled])
+
+    // Eyes
     const leftEyeRef = useRef()
     const rightEyeRef = useRef()
 
@@ -81,8 +103,6 @@ function Scene() {
     // the ones supplied by the canvas or the eyes won't
     // track when we mouse over the text body (which sits
     // on top of the canvas).
-    const leftBeamRef = useRef()
-    const rightBeamRef = useRef()
     const coords = useGlobalMousePosition()
     useGlobalMouseDown((e) => {
         if (!leftEyeRef.current || !rightEyeRef.current) return
@@ -109,6 +129,8 @@ function Scene() {
 
         scene.add(leftBeam)
         scene.add(rightBeam)
+        laserSound.stop();
+        laserSound.play();
 
         setBeams(beams => {
             return [...beams, {
@@ -133,7 +155,7 @@ function Scene() {
                 const direction = new THREE.Vector3()
                 direction.subVectors(b.destination, beam.position)
                 direction.normalize()
-                beam.position.addScaledVector(direction, d * 15)
+                beam.position.addScaledVector(direction, d * 20)
             })
 
             // Remove the beams once they reach their destination
@@ -141,7 +163,7 @@ function Scene() {
             const leftBeamDistance = leftBeam.position.distanceTo(b.destination)
             const rightBeamDistance = rightBeam.position.distanceTo(b.destination)
 
-            if (leftBeamDistance < 0.1 || rightBeamDistance < 0.1) {
+            if (leftBeamDistance < 0.2 || rightBeamDistance < 0.2) {
                 scene.remove(leftBeam)
                 scene.remove(rightBeam)
 
@@ -181,8 +203,10 @@ function Scene() {
  * TODO: Improve resolution of the kilroy texture and re-position the eyes
  * TODO: Add background break apart and dissolve to black.
  * TODO: Add eye close animation over the bounding boxes of the non-black text.
- * TODO: Add explosion animation when the lasers hit their target
- * TODO: Play audio when the lasers hit their target
+ * TODO: Finish adding sound toggle (will need global state)
+ * TODO: General code clean up and launch
+ * 
+ * IDEA: Add explosion animation when the lasers hit their target
  */
 export default function Kilroy() {
     return (

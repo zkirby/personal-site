@@ -1,16 +1,19 @@
-// A single component that togles the global sound state
+import { BiSolidVolume, BiSolidVolumeMute } from 'react-icons/bi';
+
 import useSoundEnabled from "../hooks/useSoundEnabled";
 
 export default function SoundEnabled() {
     const [soundEnabled, setSoundEnabled] = useSoundEnabled();
 
     return (
-        <div className="fixed top-0 right-0 p-5">
+        <div className="fixed top-0 right-0 p-5 z-50">
             <button
-                onClick={() => setSoundEnabled(!soundEnabled)}
-                className="bg-red-600 text-white p-2 rounded-md"
+                onClick={(e) => {
+                    setSoundEnabled(!soundEnabled)
+                }}
+                className="text-red-700 p-2 text-2xl"
             >
-                {soundEnabled ? "Sound On" : "Sound Off"}
+                {soundEnabled ? <BiSolidVolume /> : <BiSolidVolumeMute />}
             </button>
         </div>
     );
