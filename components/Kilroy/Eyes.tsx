@@ -1,10 +1,12 @@
 import { Canvas, useFrame, useLoader, useThree } from '@react-three/fiber'
-import { forwardRef, useEffect, useRef, useState } from 'react'
+import { forwardRef, useEffect, useMemo, useRef, useState } from 'react'
 import * as THREE from 'three'
 import useGlobalMousePosition from '../../hooks/useGlobalMousePosition'
 import { TextureLoader } from 'three/src/loaders/TextureLoader'
 import useGlobalMouseDown from '../../hooks/useGlobalMouseDown'
-import useSoundEnabled from '../../hooks/useSoundEnabled'
+import { useAtom } from 'jotai'
+import { soundEnabledAtom } from '../../state/sound.atoms'
+
 
 function windowToCanvasVector({ x, y }: { x: number, y: number }, camera: THREE.Camera) {
     // Create parallel plain to the canvas, this will allow 
@@ -73,27 +75,29 @@ function Scene() {
     // or change everything over to native threejs.
     const [beams, setBeams] = useState([])
     const { camera, scene } = useThree()
-    const [soundEnabled] = useSoundEnabled()
+    const [soundEnabled] = useAtom(soundEnabledAtom)
 
-    const listener = new THREE.AudioListener();
+    const listener = useMemo(() => new THREE.AudioListener(), []);
     camera.add(listener);
 
     // create a global audio source
-    const laserSound = new THREE.Audio(listener);
+    const laserSound = useMemo(() => new THREE.Audio(listener), [listener]);
 
     // load a sound and set it as the Audio object's buffer
-    const audioLoader = new THREE.AudioLoader();
+    const audioLoader = useMemo(() => new THREE.AudioLoader(), []);
     // Sound courtesy of https://pixabay.com/users/pixabay-1/
-    audioLoader.load('./blaster.mp3', (buffer) => {
+    useEffect(() => audioLoader.load('./blaster.mp3', (buffer) => {
         laserSound.setBuffer(buffer)
-        laserSound.setVolume(0.2)
         laserSound.duration = 0.4
-    });
+        console.log(soundEnabled)
+        laserSound.setVolume(soundEnabled ? 0.2 : 0.2)
+    }), []);
 
     useEffect(() => {
         laserSound.setVolume(soundEnabled ? 0.2 : 0)
-        console.log(soundEnabled)
+        console.log('sound enabled', soundEnabled)
     }, [soundEnabled])
+
 
     // Eyes
     const leftEyeRef = useRef()
@@ -143,7 +147,6 @@ function Scene() {
 
     // Load the kilroy background.
     const kilroy = useLoader(TextureLoader, './kilroy.png')
-
 
 
     useFrame((_, d) => {
@@ -201,11 +204,11 @@ function Scene() {
 /**
  * 
  * TODO: Improve resolution of the kilroy texture and re-position the eyes
- * TODO: Add background break apart and dissolve to black.
  * TODO: Add eye close animation over the bounding boxes of the non-black text.
  * TODO: Finish adding sound toggle (will need global state)
  * TODO: General code clean up and launch
  * 
+ * IDEA: Change the black cutouts to not just be squares
  * IDEA: Add explosion animation when the lasers hit their target
  */
 export default function Kilroy() {

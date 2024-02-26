@@ -1,9 +1,10 @@
+import { useAtom } from 'jotai';
 import { BiSolidVolume, BiSolidVolumeMute } from 'react-icons/bi';
+import { soundEnabledAtom } from '../state/sound.atoms';
 
-import useSoundEnabled from "../hooks/useSoundEnabled";
 
 export default function SoundEnabled() {
-    const [soundEnabled, setSoundEnabled] = useSoundEnabled();
+    const [soundEnabled, setSoundEnabled] = useAtom(soundEnabledAtom);
 
     return (
         <div className="fixed top-0 right-0 p-5 z-50">
