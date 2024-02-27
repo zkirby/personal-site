@@ -7,7 +7,7 @@ export default function Root() {
     <div>
       <AboutMe />
       {/* TODO: allow for mobile eye tracking*/}
-      <div className="md:hidden flex justify-center w-full mt-5 font-bold italic text-red-600">
+      <div className="md:hidden flex justify-center w-full mt-10 font-bold italic text-red-600 text-xl">
         (try a browser or a bigger window size to see the whole site!)
       </div>
       <div className="hidden md:block">

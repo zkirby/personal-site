@@ -1,13 +1,16 @@
+import * as THREE from "three";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
+
 import Eye from "./Eye";
 import useLaserSound from "./hooks/useLaserSound";
-import { useRef, useState } from "react";
 import useGlobalMousePosition from "../../hooks/useGlobalMousePosition";
 import useGlobalMouseDown from "../../hooks/useGlobalMouseDown";
-import * as THREE from "three";
 import windowCordsToCanvasVector from "./windowToCanvasVector";
 
 const LASER_SPEED = 25;
+const IMPACT_SQUARE_SIZE = 0.5; // The black squares that appear when the lasers hit their target.
+const VIEW_PORT_RATIO_NOMINATOR = 779;
 
 function moveBeamTowardsDestination(beam, destination, d) {
   const direction = new THREE.Vector3();
@@ -17,7 +20,7 @@ function moveBeamTowardsDestination(beam, destination, d) {
 }
 
 function Scene() {
-  const { camera, scene } = useThree();
+  const { camera, scene, size } = useThree();
   const laserSound = useLaserSound();
 
   // The beams are handled completely in THREE because doing it in
@@ -29,6 +32,27 @@ function Scene() {
   // Eye Refs
   const leftEyeRef = useRef();
   const rightEyeRef = useRef();
+  const kilroyRef = useRef();
+
+  // const scaleRatio = useMemo(() => {
+  //   return VIEW_PORT_RATIO_NOMINATOR / size.height;
+  // }, [size.height]);
+
+  // useEffect(() => {
+  //   // console.log(scene, size.height);
+  //   // Set the camera to look at the kilroy image.
+  //   if (kilroyRef.current) {
+  //     kilroyRef.current.scale.set(scaleRatio, scaleRatio, scaleRatio);
+  //     kilroyRef.current.position.copy(
+  //       windowCordsToCanvasVector({ x: 781, y: 55 }, camera)
+  //     );
+  //     console.log(
+  //       kilroyRef.current.position,
+  //       windowCordsToCanvasVector({ x: 0, y: 38 }, camera).y
+  //     );
+  //     // scene.scale.set(1, 1, scaleRatio);
+  //   }
+  // }, [scaleRatio]);
 
   // We have to use global event handlers rather than
   // the ones supplied by the canvas or the eyes won't
@@ -118,7 +142,10 @@ function Scene() {
         });
 
         // Add a black square to the scene where the beams hit
-        const squareGeo = new THREE.PlaneGeometry(0.5, 0.5);
+        const squareGeo = new THREE.PlaneGeometry(
+          IMPACT_SQUARE_SIZE,
+          IMPACT_SQUARE_SIZE
+        );
         const squareMat = new THREE.MeshBasicMaterial({ color: "black" });
         const square = new THREE.Mesh(squareGeo, squareMat);
         square.position.copy(laser.destination);
@@ -132,7 +159,7 @@ function Scene() {
       {/* @ts-expect-error */}
       <ambientLight intensity={Math.PI} />
 
-      <mesh position={[0, 5.5, 0]}>
+      <mesh position={[0, 5.5, 0]} ref={kilroyRef}>
         <planeGeometry args={[7.92, 3.48]} />
         <meshStandardMaterial map={kilroy} transparent={true} />
         <Eye coords={coords} position={[-0.75, 0.75, 0]} ref={leftEyeRef} />
@@ -146,6 +173,7 @@ function Scene() {
  * TODO: Prevent the canvas from shrinking when the height changes.
  * TODO: Add eye close animation over the bounding boxes of the non-black text.
  * TODO: General polish and launch
+ * - easier way to do height calculations
  *
  * IDEA: Change the black cutouts to not just be squares
  * IDEA: Add explosion animation when the lasers hit their target
