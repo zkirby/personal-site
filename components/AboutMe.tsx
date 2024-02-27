@@ -1,12 +1,23 @@
+import { useAtom } from "jotai";
 import React, { PropsWithChildren } from "react";
+import { shouldCloseEyesAtom } from "../state/sound.atoms";
 
-function Highlight({ href, children }: PropsWithChildren<{ href: string }>) {
+function Highlight({
+  href,
+  setShouldCloseEye,
+  children,
+}: PropsWithChildren<{
+  href: string;
+  setShouldCloseEye: (close: boolean) => void;
+}>) {
   return (
     <a
       className="highlight"
       target="_blank"
       href={href}
       onClick={(e) => e.stopPropagation()}
+      onMouseEnter={() => setShouldCloseEye(true)}
+      onMouseLeave={() => setShouldCloseEye(false)}
     >
       {children}
     </a>
@@ -14,6 +25,8 @@ function Highlight({ href, children }: PropsWithChildren<{ href: string }>) {
 }
 
 export default function AboutMe({}) {
+  const [_, setShouldCloseEye] = useAtom(shouldCloseEyesAtom);
+
   return (
     <div className="p-10 fixed w-full top-[140px] z-10">
       <div className="m-auto w-[800px] flex justify-center">
@@ -30,7 +43,10 @@ export default function AboutMe({}) {
               an enumaration of things I'm currently interested in which will
               begin now: HCI and the future of computer interfaces in an
               AI-first world, client performance - both build and runtime, and{" "}
-              <Highlight href="https://substack.com/@zkirby">
+              <Highlight
+                href="https://substack.com/@zkirby"
+                setShouldCloseEye={setShouldCloseEye}
+              >
                 {" "}
                 writing
               </Highlight>
@@ -38,19 +54,29 @@ export default function AboutMe({}) {
             </p>
             <p className="mt-4 text-xl">
               Recently, I was the co-founder of{" "}
-              <Highlight href="https://www.vessel.dev/">Vessel</Highlight>, a
-              YC/venture backed startup with the tag line "We make it quick and
-              easy to add user-facing integrations to your SaaS product". It was
-              the most interesting thing I've done in my (short) career so far.
-              It was full of ups and downs and some lefts and one right... but
-              that's a story for another time.
+              <Highlight
+                href="https://www.vessel.dev/"
+                setShouldCloseEye={setShouldCloseEye}
+              >
+                Vessel
+              </Highlight>
+              , a YC/venture backed startup with the tag line "We make it quick
+              and easy to add user-facing integrations to your SaaS product". It
+              was the most interesting thing I've done in my (short) career so
+              far. It was full of ups and downs and some lefts and one right...
+              but that's a story for another time.
             </p>
             <p className="mt-4 text-xl">
               I have a general distaste for social media of any kind. I do,
               however, love to connect and exchange ideas with other people and
               will respond to most (relevant) emails. You can{" "}
-              <Highlight href="mailto:zach@zkirby.com">contact</Highlight> me
-              about anything, assuming it isn't an unnecessary solicitation.
+              <Highlight
+                href="mailto:zach@zkirby.com"
+                setShouldCloseEye={setShouldCloseEye}
+              >
+                contact
+              </Highlight>{" "}
+              me about anything, assuming it isn't an unnecessary solicitation.
             </p>
             <p className="text-xl mt-4 text-red-700">- Zachary Kirby</p>
           </div>

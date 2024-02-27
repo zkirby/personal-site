@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
+import Stats from "three/examples/jsm/libs/stats.module";
 
 import Eye from "./Eye";
 import useLaserSound from "./hooks/useLaserSound";
@@ -28,6 +29,12 @@ function Scene() {
   // TODO: See if there's a better way to incorporate this into react-three
   // or change everything over to native threejs.
   const [lasers, setLasers] = useState([]);
+
+  const stats = useMemo(() => new Stats(), []);
+
+  useEffect(() => {
+    document.body.appendChild(stats.dom);
+  }, [stats]);
 
   // Eye Refs
   const leftEyeRef = useRef();
@@ -118,6 +125,10 @@ function Scene() {
 
   useFrame((_, d) => {
     // Advance the laser beams towards their destinations.
+    // kilroyRef.current.position.x = Math.sin(d);
+
+    stats.update();
+
     lasers.forEach((laser) => {
       // Move the beams towards their destinations
       laser.beams.forEach((beam) => {
