@@ -37,13 +37,20 @@ function useLidAnimation(
   const positionKF = useMemo(() => {
     return new THREE.VectorKeyframeTrack(
       ".position",
-      [0, 0.15],
+      [0, 0.02],
       positionStart.concat(positionEnd)
+    );
+  }, []);
+  const scaleKF = useMemo(() => {
+    return new THREE.VectorKeyframeTrack(
+      ".scale",
+      [0, 0.001],
+      [1, 1, 1, 1.05, 1.05, 1.05]
     );
   }, []);
 
   const clip = useMemo(() => {
-    return new THREE.AnimationClip("Action", 1, [positionKF]);
+    return new THREE.AnimationClip("Action", 0.1, [positionKF, scaleKF]);
   }, [positionKF]);
 
   const action = useMemo(() => {
@@ -122,6 +129,9 @@ const Eye = forwardRef(
 
     return (
       <mesh position={props.position} ref={ref}>
+        <sphereGeometry args={[0.4, 32, 32]} />
+        <meshBasicMaterial color="#e8e8e8" />
+        <Pupil />
         <mesh position={[0, 0, 0]} ref={topEyeLid}>
           <sphereGeometry args={[0.39, 32, 32]} />
           <meshBasicMaterial color="#B4B4B8" />
@@ -130,9 +140,6 @@ const Eye = forwardRef(
           <sphereGeometry args={[0.39, 32, 32]} />
           <meshBasicMaterial color="#C7C8CC" />
         </mesh>
-        <sphereGeometry args={[0.4, 32, 32]} />
-        <meshBasicMaterial color="#e8e8e8" />
-        <Pupil />
       </mesh>
     );
   }
