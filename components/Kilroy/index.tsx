@@ -7,6 +7,15 @@ import useGlobalMouseDown from "../../hooks/useGlobalMouseDown";
 import * as THREE from "three";
 import windowCordsToCanvasVector from "./windowToCanvasVector";
 
+const LASER_SPEED = 25;
+
+function moveBeamTowardsDestination(beam, destination, d) {
+  const direction = new THREE.Vector3();
+  direction.subVectors(destination, beam.position);
+  direction.normalize();
+  beam.position.addScaledVector(direction, d * LASER_SPEED);
+}
+
 function Scene() {
   const { camera, scene } = useThree();
   const laserSound = useLaserSound();
@@ -46,6 +55,9 @@ function Scene() {
     leftBeam.lookAt(destination);
     leftBeam.rotateX(Math.PI / 2);
 
+    // HACK: Move the beam forward one unit so it doesn't peak out from behind the eye.
+    moveBeamTowardsDestination(leftBeam, destination, 0.01);
+
     // Right Beam
     const rightBeam = new THREE.Mesh(laserGeo, laserMaterial);
     const rightBeamPosition = new THREE.Vector3();
@@ -54,6 +66,9 @@ function Scene() {
     rightBeam.position.copy(rightBeamPosition);
     rightBeam.lookAt(destination);
     rightBeam.rotateX(Math.PI / 2);
+
+    // HACK: Move the beam forward one unit so it doesn't peak out from behind the eye.
+    moveBeamTowardsDestination(rightBeam, destination, 0.01);
 
     scene.add(leftBeam);
     scene.add(rightBeam);
@@ -82,10 +97,7 @@ function Scene() {
     lasers.forEach((laser) => {
       // Move the beams towards their destinations
       laser.beams.forEach((beam) => {
-        const direction = new THREE.Vector3();
-        direction.subVectors(laser.destination, beam.position);
-        direction.normalize();
-        beam.position.addScaledVector(direction, d * 25);
+        moveBeamTowardsDestination(beam, laser.destination, d);
       });
 
       // Remove the beams once they reach their destination
@@ -131,11 +143,9 @@ function Scene() {
 }
 
 /**
- * TODO: Add eye close animation over the bounding boxes of the non-black text. (can probably just do this with a global 'on mouse over' event)
  * TODO: Prevent the canvas from shrinking when the height changes.
- * TODO: General code clean up and launch
- *  - experiment with different laser shapes
- *  - push lasers forward a little so they don't peak out of the back of the eyes
+ * TODO: Add eye close animation over the bounding boxes of the non-black text.
+ * TODO: General polish and launch
  *
  * IDEA: Change the black cutouts to not just be squares
  * IDEA: Add explosion animation when the lasers hit their target
