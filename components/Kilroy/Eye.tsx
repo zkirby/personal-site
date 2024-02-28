@@ -1,9 +1,9 @@
 import { ThreeElements, useFrame, useThree } from "@react-three/fiber";
 import React, { forwardRef, useEffect, useRef } from "react";
-import windowCordsToCanvasVector from "./windowToCanvasVector";
 import { shouldCloseEyesAtom } from "../../state/sound.atoms";
 import { useAtom } from "jotai";
 import * as THREE from "three";
+import { windowCordsToCanvasVector3 } from "./windowToCanvas";
 
 interface EyeProps {
   position: [number, number, number];
@@ -18,7 +18,7 @@ const Eye = forwardRef(
     useEffect(() => {
       if (!props.coords || !ref.current) return;
 
-      const pointOfIntersection = windowCordsToCanvasVector(
+      const pointOfIntersection = windowCordsToCanvasVector3(
         props.coords,
         camera
       );

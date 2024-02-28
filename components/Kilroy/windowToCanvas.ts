@@ -3,7 +3,7 @@ import * as THREE from "three";
 /**
  * Get the 3D vector of the mouse position in the canvas
  */
-export default function windowCordsToCanvasVector(
+export function windowCordsToCanvasVector3(
   { x, y }: { x: number; y: number },
   camera: THREE.Camera
 ) {
@@ -23,4 +23,32 @@ export default function windowCordsToCanvasVector(
   raycaster.ray.intersectPlane(plane, pointOfIntersection);
 
   return pointOfIntersection;
+}
+
+/**
+ * Returns a z value independent vector translated from the mouse position to the world position
+ *
+ * @source https://stackoverflow.com/questions/13055214/mouse-canvas-x-y-to-three-js-world-x-y-z/13091694#13091694
+ */
+export function windowCordsToCanvasVector2(
+  { x, y }: { x: number; y: number },
+  camera: THREE.Camera
+) {
+  const vec = new THREE.Vector3();
+  const pos = new THREE.Vector3();
+
+  vec.set(
+    (0 / window.innerWidth) * 2 - 1,
+    -(110 / window.innerHeight) * 2 + 1,
+    0.5
+  );
+
+  vec.unproject(camera);
+
+  vec.sub(camera.position).normalize();
+
+  const distance = -camera.position.z / vec.z;
+
+  pos.copy(camera.position).add(vec.multiplyScalar(distance));
+  return pos;
 }

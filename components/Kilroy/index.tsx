@@ -1,16 +1,38 @@
 import * as THREE from "three";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
+import {
+  Canvas,
+  ThreeElements,
+  useFrame,
+  useLoader,
+  useThree,
+} from "@react-three/fiber";
 
 import Eye from "./Eye";
 import useLaserSound from "./hooks/useLaserSound";
 import useGlobalMousePosition from "../../hooks/useGlobalMousePosition";
 import useGlobalMouseDown from "../../hooks/useGlobalMouseDown";
-import windowCordsToCanvasVector from "./windowToCanvasVector";
+import {
+  windowCordsToCanvasVector2,
+  windowCordsToCanvasVector3,
+} from "./windowToCanvas";
 
+/**
+ * I've effectively wedged myself between a rock and a hard place. I want the eyes
+ * of kilroy to be drawn with a perspective camera, but I want the entire object (with the kilroy image)
+ * to appear '2D' and stay in one position and size no matter what the viewport dimensions are.
+ *
+ * To achieve that, I've built the scene with a specific viewport height in mind (width won't change the kilroy dimensions).
+ * I then calculate the scale ratio based on the current viewport height and use that to scale everything.
+ *
+ * TODO: Figure out a less hacky way to keep the kilroy graphic a consistent size and position.
+ */
+const VIEW_PORT_RATIO_NOMINATOR = 779;
+const KILROY_TOP_IN_PX = 110; // The 'AboutMe' is hard coded to be 140px from the top so keeping kilroy at 110 is about right.
+
+// Laser Constants
 const LASER_SPEED = 12.5;
 const IMPACT_SQUARE_SIZE = 0.2; // The black squares that appear when the lasers hit their target.
-const VIEW_PORT_RATIO_NOMINATOR = 779;
 
 function moveBeamTowardsDestination(beam, destination, d) {
   const direction = new THREE.Vector3();
@@ -20,7 +42,7 @@ function moveBeamTowardsDestination(beam, destination, d) {
 }
 
 function Scene() {
-  const { camera, scene, size, viewport, gl } = useThree();
+  const { camera, scene, size } = useThree();
   const laserSound = useLaserSound();
 
   // The beams are handled completely in THREE because doing it in
@@ -32,45 +54,21 @@ function Scene() {
   // Eye Refs
   const leftEyeRef = useRef();
   const rightEyeRef = useRef();
-  const kilroyRef = useRef();
+  const kilroyRef = useRef<ThreeElements["mesh"]>();
 
-  // const scaleRatio = useMemo(() => {
-  //   return VIEW_PORT_RATIO_NOMINATOR / size.height;
-  // }, [size.height]);
+  const scaleRatio = useMemo(() => {
+    return VIEW_PORT_RATIO_NOMINATOR / size.height;
+  }, [size.height]);
 
   useEffect(() => {
-    // console.log(scene, size.height);
-    // Set the camera to look at the kilroy image.
+    if (!kilroyRef.current) return;
+    const pos = windowCordsToCanvasVector2(
+      { x: 0, y: KILROY_TOP_IN_PX },
+      camera
+    );
 
-    console.log(viewport);
-    var tanFOV = Math.tan(((Math.PI / 180) * 75) / 2);
-
-    // kilroyRef.current.scale.set(scaleRatio, scaleRatio, scaleRatio);
-    // kilroyRef.current.position.copy(
-    //   windowCordsToCanvasVector({ x: 781, y: 55 }, camera)
-    // );
-    // console.log(
-    //   kilroyRef.current.position,
-    //   windowCordsToCanvasVector({ x: 0, y: 38 }, camera).y
-    // );
-    // kilroyRef.current.position.set(
-    //   kilroyRef.current.position.x,
-    //   3 * (size.height / window.innerHeight) - 1.5,
-    //   kilroyRef.current.position.z
-    // );
-    // camera.aspect = window.innerWidth / window.innerHeight;
-
-    // adjust the FOV
-    // camera.fov =
-    //   (360 / Math.PI) *
-    //   Math.atan(tanFOV * (window.innerHeight / VIEW_PORT_RATIO_NOMINATOR));
-
-    // console.log(size.height, camera.fov);
-
-    // kilroyRef.current.center.set(0, 0);
-    // kilroyRef.current.scale.set(w, h, 1);
-
-    // scene.scale.set(1, 1, scaleRatio);
+    kilroyRef.current.scale.set(scaleRatio, scaleRatio, scaleRatio);
+    kilroyRef.current.position.y = pos.y;
   }, [size.height, window.innerHeight, kilroyRef.current]);
 
   // We have to use global event handlers rather than
@@ -79,12 +77,15 @@ function Scene() {
   // on top of the canvas).
   const coords = useGlobalMousePosition();
 
-  const laserGeo = new THREE.CapsuleGeometry(0.075, 0.4, 4, 8);
+  const laserGeo = useMemo(
+    () => new THREE.CapsuleGeometry(0.075 * scaleRatio, 0.4 * scaleRatio, 4, 8),
+    [scaleRatio]
+  );
   const laserMaterial = new THREE.MeshStandardMaterial({ color: "#b91c1b" });
   useGlobalMouseDown((e) => {
     if (!leftEyeRef.current || !rightEyeRef.current) return;
 
-    const destination = windowCordsToCanvasVector(
+    const destination = windowCordsToCanvasVector3(
       { x: e.clientX, y: e.clientY },
       camera
     );
@@ -162,8 +163,8 @@ function Scene() {
 
         // Add a black square to the scene where the beams hit
         const squareGeo = new THREE.PlaneGeometry(
-          IMPACT_SQUARE_SIZE,
-          IMPACT_SQUARE_SIZE
+          IMPACT_SQUARE_SIZE * scaleRatio,
+          IMPACT_SQUARE_SIZE * scaleRatio
         );
         const squareMat = new THREE.MeshBasicMaterial({ color: "black" });
         const square = new THREE.Mesh(squareGeo, squareMat);
@@ -178,7 +179,7 @@ function Scene() {
       {/* @ts-expect-error */}
       <ambientLight intensity={Math.PI} />
 
-      <mesh position={[0, 2.75, 0]} ref={kilroyRef}>
+      <mesh position={[0, 0, 0]} ref={kilroyRef}>
         <planeGeometry args={[3.96, 1.74]} />
         <meshStandardMaterial map={kilroy} transparent={true} />
         <Eye coords={coords} position={[-0.375, 0.375, 0]} ref={leftEyeRef} />
@@ -189,7 +190,6 @@ function Scene() {
 }
 
 /**
- * TODO: Prevent the canvas from shrinking when the height changes.
  * TODO: Add eye close animation over the bounding boxes of the non-black text.
  * TODO: General polish and launch
  * - easier way to do height calculations

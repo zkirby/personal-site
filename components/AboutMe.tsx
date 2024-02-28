@@ -38,11 +38,11 @@ export default function AboutMe({}) {
           <div className="text-left font-sans">
             <p className="mt-4 text-xl">Hi there.</p>
             <p className="mt-4 text-xl">
-              My name is Zach. Thanks for stopping by and checking out my
-              website. You won't find much here except a collection of links and
-              an enumaration of things I'm currently interested in which will
-              begin now: HCI and the future of computer interfaces in an
-              AI-first world, client performance - both build and runtime, and{" "}
+              Thanks for stopping by and checking out my website. You won't find
+              much here except a collection of links and an enumaration of
+              things I'm currently interested in which will begin now: HCI and
+              the future of computer interfaces in an AI-first world, client
+              performance - both build and runtime, and{" "}
               <Highlight
                 href="https://substack.com/@zkirby"
                 setShouldCloseEye={setShouldCloseEye}
