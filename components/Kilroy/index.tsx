@@ -8,8 +8,8 @@ import useGlobalMousePosition from "../../hooks/useGlobalMousePosition";
 import useGlobalMouseDown from "../../hooks/useGlobalMouseDown";
 import windowCordsToCanvasVector from "./windowToCanvasVector";
 
-const LASER_SPEED = 25;
-const IMPACT_SQUARE_SIZE = 0.5; // The black squares that appear when the lasers hit their target.
+const LASER_SPEED = 12.5;
+const IMPACT_SQUARE_SIZE = 0.2; // The black squares that appear when the lasers hit their target.
 const VIEW_PORT_RATIO_NOMINATOR = 779;
 
 function moveBeamTowardsDestination(beam, destination, d) {
@@ -20,7 +20,7 @@ function moveBeamTowardsDestination(beam, destination, d) {
 }
 
 function Scene() {
-  const { camera, scene, size } = useThree();
+  const { camera, scene, size, viewport, gl } = useThree();
   const laserSound = useLaserSound();
 
   // The beams are handled completely in THREE because doing it in
@@ -38,21 +38,40 @@ function Scene() {
   //   return VIEW_PORT_RATIO_NOMINATOR / size.height;
   // }, [size.height]);
 
-  // useEffect(() => {
-  //   // console.log(scene, size.height);
-  //   // Set the camera to look at the kilroy image.
-  //   if (kilroyRef.current) {
-  //     kilroyRef.current.scale.set(scaleRatio, scaleRatio, scaleRatio);
-  //     kilroyRef.current.position.copy(
-  //       windowCordsToCanvasVector({ x: 781, y: 55 }, camera)
-  //     );
-  //     console.log(
-  //       kilroyRef.current.position,
-  //       windowCordsToCanvasVector({ x: 0, y: 38 }, camera).y
-  //     );
-  //     // scene.scale.set(1, 1, scaleRatio);
-  //   }
-  // }, [scaleRatio]);
+  useEffect(() => {
+    // console.log(scene, size.height);
+    // Set the camera to look at the kilroy image.
+
+    console.log(viewport);
+    var tanFOV = Math.tan(((Math.PI / 180) * 75) / 2);
+
+    // kilroyRef.current.scale.set(scaleRatio, scaleRatio, scaleRatio);
+    // kilroyRef.current.position.copy(
+    //   windowCordsToCanvasVector({ x: 781, y: 55 }, camera)
+    // );
+    // console.log(
+    //   kilroyRef.current.position,
+    //   windowCordsToCanvasVector({ x: 0, y: 38 }, camera).y
+    // );
+    // kilroyRef.current.position.set(
+    //   kilroyRef.current.position.x,
+    //   3 * (size.height / window.innerHeight) - 1.5,
+    //   kilroyRef.current.position.z
+    // );
+    // camera.aspect = window.innerWidth / window.innerHeight;
+
+    // adjust the FOV
+    // camera.fov =
+    //   (360 / Math.PI) *
+    //   Math.atan(tanFOV * (window.innerHeight / VIEW_PORT_RATIO_NOMINATOR));
+
+    // console.log(size.height, camera.fov);
+
+    // kilroyRef.current.center.set(0, 0);
+    // kilroyRef.current.scale.set(w, h, 1);
+
+    // scene.scale.set(1, 1, scaleRatio);
+  }, [size.height, window.innerHeight, kilroyRef.current]);
 
   // We have to use global event handlers rather than
   // the ones supplied by the canvas or the eyes won't
@@ -60,7 +79,7 @@ function Scene() {
   // on top of the canvas).
   const coords = useGlobalMousePosition();
 
-  const laserGeo = new THREE.CapsuleGeometry(0.15, 0.8, 4, 8);
+  const laserGeo = new THREE.CapsuleGeometry(0.075, 0.4, 4, 8);
   const laserMaterial = new THREE.MeshStandardMaterial({ color: "#b91c1b" });
   useGlobalMouseDown((e) => {
     if (!leftEyeRef.current || !rightEyeRef.current) return;
@@ -159,11 +178,11 @@ function Scene() {
       {/* @ts-expect-error */}
       <ambientLight intensity={Math.PI} />
 
-      <mesh position={[0, 5.5, 0]} ref={kilroyRef}>
-        <planeGeometry args={[7.92, 3.48]} />
+      <mesh position={[0, 2.75, 0]} ref={kilroyRef}>
+        <planeGeometry args={[3.96, 1.74]} />
         <meshStandardMaterial map={kilroy} transparent={true} />
-        <Eye coords={coords} position={[-0.75, 0.75, 0]} ref={leftEyeRef} />
-        <Eye coords={coords} position={[0.15, 0.75, 0]} ref={rightEyeRef} />
+        <Eye coords={coords} position={[-0.375, 0.375, 0]} ref={leftEyeRef} />
+        <Eye coords={coords} position={[0.075, 0.375, 0]} ref={rightEyeRef} />
       </mesh>
     </>
   );
@@ -180,7 +199,7 @@ function Scene() {
  */
 export default function Kilroy() {
   return (
-    <Canvas flat className="three-scene" camera={{ position: [0, 0, 10] }}>
+    <Canvas flat className="three-scene">
       <Scene />
     </Canvas>
   );

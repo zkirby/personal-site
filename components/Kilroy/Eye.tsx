@@ -1,85 +1,9 @@
 import { ThreeElements, useFrame, useThree } from "@react-three/fiber";
-import React, {
-  forwardRef,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-} from "react";
+import React, { forwardRef, useEffect, useRef } from "react";
 import windowCordsToCanvasVector from "./windowToCanvasVector";
-import * as THREE from "three";
 import { shouldCloseEyesAtom } from "../../state/sound.atoms";
 import { useAtom } from "jotai";
-
-function Pupil() {
-  return (
-    <mesh position={[0, 0, 0.25]}>
-      <sphereGeometry args={[0.2, 32, 32]} />
-      <meshToonMaterial color="black" />
-      <mesh position={[0.05, 0.05, 0.15]}>
-        <sphereGeometry args={[0.05, 32, 32]} />
-        <meshToonMaterial />
-      </mesh>
-    </mesh>
-  );
-}
-
-function useLidAnimation(
-  lidRef: React.RefObject<ThreeElements["mesh"]>,
-  positionEnd: [number, number, number]
-) {
-  const mixer = useMemo(() => {
-    if (!lidRef.current) return;
-    return new THREE.AnimationMixer(lidRef.current);
-  }, [lidRef.current]);
-
-  const positionStart = [0, 0, 0];
-  const positionKF = useMemo(() => {
-    return new THREE.VectorKeyframeTrack(
-      ".position",
-      [0, 0.02],
-      positionStart.concat(positionEnd)
-    );
-  }, []);
-  const scaleKF = useMemo(() => {
-    return new THREE.VectorKeyframeTrack(
-      ".scale",
-      [0, 0.001],
-      [1, 1, 1, 1.05, 1.05, 1.05]
-    );
-  }, []);
-
-  const clip = useMemo(() => {
-    return new THREE.AnimationClip("Action", 0.1, [positionKF, scaleKF]);
-  }, [positionKF]);
-
-  const action = useMemo(() => {
-    if (!mixer || !clip) return;
-    const animationAction = new THREE.AnimationAction(mixer, clip);
-    animationAction.setLoop(THREE.LoopOnce);
-    animationAction.clampWhenFinished = true;
-    return animationAction;
-  }, [clip, mixer]);
-
-  useFrame((_, delta) => {
-    if (mixer) mixer.update(delta);
-  });
-
-  return {
-    play: useCallback(() => {
-      if (!action) return;
-      action.reset();
-      action.timeScale = 0.5;
-      action.play();
-    }, [action]),
-    reverse: useCallback(() => {
-      if (!action) return;
-      action.paused = false;
-      action.timeScale = -0.5;
-      action.play();
-    }, [action]),
-  };
-}
+import * as THREE from "three";
 
 interface EyeProps {
   position: [number, number, number];
@@ -90,9 +14,6 @@ const Eye = forwardRef(
   (props: EyeProps, ref: React.RefObject<ThreeElements["mesh"]>) => {
     const camera = useThree((p) => p.camera);
     const [shouldCloseEyes] = useAtom(shouldCloseEyesAtom);
-
-    const topEyeLid = useRef();
-    const bottomEyeLid = useRef();
 
     useEffect(() => {
       if (!props.coords || !ref.current) return;
@@ -106,39 +27,115 @@ const Eye = forwardRef(
       ref.current.lookAt(pointOfIntersection);
     }, [ref?.current, props.coords]);
 
-    const { play: playTop, reverse: reverseTop } = useLidAnimation(
-      topEyeLid,
-      [0, 0.05, 0.06]
-    );
-    const { play: playBottom, reverse: reverseBottom } = useLidAnimation(
-      bottomEyeLid,
-      [0, 0, 0.06]
-    );
+    const pupilRef = useRef();
 
-    useEffect(() => {
-      if (!topEyeLid.current || !bottomEyeLid.current) return;
-      if (shouldCloseEyes) {
-        playTop();
-        playBottom();
-      }
-      if (!shouldCloseEyes) {
-        reverseTop();
-        reverseBottom();
-      }
-    }, [shouldCloseEyes, topEyeLid.current, bottomEyeLid.current]);
+    const vec = new THREE.Vector3();
+
+    // useEffect(() => {
+    //   if (!pupilRef.current) return;
+    //   const geometry = pupilRef.current.geometry;
+
+    //   // create an empty array to  hold targets for the attribute we want to morph
+    //   // morphing positions and normals is supported
+    //   geometry.morphAttributes.position = [];
+
+    //   const positions = geometry.attributes.position;
+    //   const newPost = [];
+
+    //   const a = Array(16).fill(0);
+    //   const b = Array(16).fill(0);
+
+    //   const VERT1 = 0.4;
+    //   const VERT2 = 0.2;
+
+    //   let ab = [0, 0];
+    //   console.log(positions.count);
+    //   for (var i = 0; i < positions.count; i++) {
+    //     // tile
+    //     vec.fromBufferAttribute(positions, i);
+    //     let x = vec.x;
+    //     let y = vec.y;
+    //     let z = vec.z;
+
+    //     if (x > 0 && y > 0) {
+    //       y += VERT2;
+    //       x += VERT2;
+    //     } else if (x > 0 && y < 0) {
+    //       y -= VERT2;
+    //       x += VERT2;
+    //     } else if (x < 0 && y > 0) {
+    //       y += VERT2;
+    //       x -= VERT2;
+    //     } else if (x < 0 && y < 0) {
+    //       y -= VERT2;
+    //       x -= VERT2;
+    //     }
+
+    //     const sliceIndex = getSliceIndex(x, y, z);
+    //     a[sliceIndex]++;
+
+    //     // if (sliceIndex === 0) {
+    //     //   x = VERT2;
+    //     //   y = -VERT1;
+    //     // } else if (sliceIndex === 1) {
+    //     //   x = VERT2;
+    //     // //   y = -VERT1;
+    //     // if (sliceIndex === 0 || sliceIndex === 15) {
+    //     //   // x = VERT1;
+    //     //   // x = -VERT1;
+    //     // } else if (sliceIndex === 12 || sliceIndex === 11) {
+    //     //   y = VERT1;
+    //     // } else if (sliceIndex === 4 || sliceIndex === 3) {
+    //     //   y = -VERT1;
+    //     // } else if (sliceIndex === 7 || sliceIndex === 8) {
+    //     //   x = VERT1;
+    //     // } else {
+    //     //   // x = 0;
+    //     //   // y = 0;
+    //     // }
+
+    //     newPost.push(x, y, z);
+    //   }
+    //   console.log(b);
+
+    //   geometry.morphAttributes.position = [
+    //     new THREE.Float32BufferAttribute(newPost, 3),
+    //   ];
+
+    //   pupilRef.current.updateMorphTargets();
+    // }, [pupilRef.current]);
+
+    // useFrame((_, d) => {
+    //   if (!pupilRef.current) return;
+
+    //   // Open the eyes
+
+    //   // pupilRef.current.morphTargetInfluences["x"] += d / 2;
+    // });
+
+    // useFrame(({ clock }) => {
+    //   if (!pupilRef.current) return;
+    //   pupilRef.current.morphTargetInfluences[0] =
+    //     Math.sin(clock.getElapsedTime() * 3) * 0.5 + 0.5;
+    // });
 
     return (
       <mesh position={props.position} ref={ref}>
-        <sphereGeometry args={[0.4, 32, 32]} />
+        <sphereGeometry args={[0.2, 32, 32]} />
         <meshBasicMaterial color="#e8e8e8" />
-        <Pupil />
-        <mesh position={[0, 0, 0]} ref={topEyeLid}>
-          <sphereGeometry args={[0.39, 32, 32]} />
-          <meshBasicMaterial color="#B4B4B8" />
-        </mesh>
-        <mesh position={[0, 0, 0]} ref={bottomEyeLid}>
-          <sphereGeometry args={[0.39, 32, 32]} />
-          <meshBasicMaterial color="#C7C8CC" />
+
+        {/* Pupil */}
+        <mesh
+          position={[0, 0, 0.125]}
+          ref={pupilRef}
+          // morphTargetInfluences={[0]}
+        >
+          <sphereGeometry args={[0.1, 100, 100]} />
+          <meshToonMaterial color="black" morphTargets />
+          <mesh position={[0.025, 0.025, 0.075]}>
+            <sphereGeometry args={[0.025, 32, 32]} />
+            <meshToonMaterial />
+          </mesh>
         </mesh>
       </mesh>
     );
