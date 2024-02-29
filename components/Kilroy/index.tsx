@@ -8,8 +8,8 @@ import {
   useThree,
 } from "@react-three/fiber";
 
-import Eye from "./Eye";
-import useLaserSound from "./hooks/useLaserSound";
+import Eye from "./Eye/Index";
+import useLaserSound from "./Eye/hooks/useLaserSound";
 import useGlobalMousePosition from "../../hooks/useGlobalMousePosition";
 import useGlobalMouseDown from "../../hooks/useGlobalMouseDown";
 import {

@@ -1,12 +1,12 @@
 import { useThree } from "@react-three/fiber";
 import { useAtom } from "jotai";
-import { soundEnabledAtom } from "../../../state/sound.atoms";
 import { useEffect, useMemo } from "react";
 import * as THREE from "three";
 
+import { soundEnabledAtom } from "../../../../state/sound.atoms";
+
 /**
- * Mostly split up for readability, shouldn't exist outside
- * of the scope of the Eye component.
+ * Mostly split up for readability.
  */
 export default function useLaserSound() {
   const camera = useThree((t) => t.camera);

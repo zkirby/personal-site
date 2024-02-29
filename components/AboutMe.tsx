@@ -8,7 +8,7 @@ function Highlight({
 }: PropsWithChildren<{
   href: string;
 }>) {
-  const shouldEnableLaserEyes = useSetAtom(laserEyesEnabledAtom);
+  const enabledLaserEyes = useSetAtom(laserEyesEnabledAtom);
 
   return (
     <a
@@ -16,8 +16,8 @@ function Highlight({
       target="_blank"
       href={href}
       onClick={(e) => e.stopPropagation()}
-      onMouseEnter={() => shouldEnableLaserEyes(true)}
-      onMouseLeave={() => shouldEnableLaserEyes(false)}
+      onMouseEnter={() => enabledLaserEyes(true)}
+      onMouseLeave={() => enabledLaserEyes(false)}
     >
       {children}
     </a>
