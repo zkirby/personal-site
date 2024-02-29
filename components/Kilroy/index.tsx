@@ -31,7 +31,7 @@ const VIEW_PORT_RATIO_NOMINATOR = 779;
 const KILROY_TOP_IN_PX = 110; // The 'AboutMe' is hard coded to be 140px from the top so keeping kilroy at 110 is about right.
 
 // Laser Constants
-const LASER_SPEED = 12.5;
+const LASER_SPEED = 15;
 const IMPACT_SQUARE_SIZE = 0.2; // The black squares that appear when the lasers hit their target.
 
 function moveBeamTowardsDestination(beam, destination, d) {
@@ -153,7 +153,7 @@ function Scene() {
         laser.destination
       );
 
-      if (leftBeamDistanceToDest < 0.2 || rightBeamDistanceToDest < 0.2) {
+      if (leftBeamDistanceToDest < 0.25 || rightBeamDistanceToDest < 0.25) {
         scene.remove(leftBeam);
         scene.remove(rightBeam);
 
@@ -190,7 +190,6 @@ function Scene() {
 }
 
 /**
- * TODO: Add eye close animation over the bounding boxes of the non-black text.
  * TODO: General polish and launch
  *
  * IDEA: Change the black cutouts to not just be squares
