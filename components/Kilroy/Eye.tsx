@@ -1,8 +1,9 @@
 import { ThreeElements, useFrame, useThree } from "@react-three/fiber";
-import React, { forwardRef, useEffect, useRef } from "react";
+import React, { forwardRef, useEffect, useMemo, useRef } from "react";
 import { shouldCloseEyesAtom } from "../../state/sound.atoms";
 import { useAtom } from "jotai";
 import * as THREE from "three";
+import * as BufferGeometryUtils from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { windowCordsToCanvasVector3 } from "./windowToCanvas";
 
 interface EyeProps {
@@ -14,6 +15,8 @@ const Eye = forwardRef(
   (props: EyeProps, ref: React.RefObject<ThreeElements["mesh"]>) => {
     const camera = useThree((p) => p.camera);
     const [shouldCloseEyes] = useAtom(shouldCloseEyesAtom);
+
+    const pupilRef = useRef<THREE.Mesh>();
 
     useEffect(() => {
       if (!props.coords || !ref.current) return;
@@ -27,110 +30,91 @@ const Eye = forwardRef(
       ref.current.lookAt(pointOfIntersection);
     }, [ref?.current, props.coords]);
 
-    const pupilRef = useRef();
+    const crossGeo = useMemo(() => {
+      const boxW = 0.1;
+      const boxH = 0.1;
+      const boxD = 0.5;
+      const geometry1 = new THREE.BoxGeometry(boxW, boxH, boxD, 100, 50);
+      const geometry2 = new THREE.BoxGeometry(boxW, boxH, boxD, 100, 50);
 
-    const vec = new THREE.Vector3();
+      // Translate the second box to form the 'X' shape
+      geometry2.rotateX(Math.PI / 2); // Rotate by 45 degrees
 
-    // useEffect(() => {
-    //   if (!pupilRef.current) return;
-    //   const geometry = pupilRef.current.geometry;
+      const combinedGeometry = BufferGeometryUtils.mergeGeometries([
+        geometry1,
+        geometry2,
+      ]);
 
-    //   // create an empty array to  hold targets for the attribute we want to morph
-    //   // morphing positions and normals is supported
-    //   geometry.morphAttributes.position = [];
+      combinedGeometry.rotateX(Math.PI / 4);
+      combinedGeometry.rotateY(Math.PI / 2);
+      return combinedGeometry;
+    }, []);
 
-    //   const positions = geometry.attributes.position;
-    //   const newPost = [];
+    useEffect(() => {
+      if (!crossGeo) return;
+      const geometry = crossGeo;
+      const squareGeometry = new THREE.BoxGeometry(0.2, 0.2, 0.2, 1, 1);
+      const sphereGeometry = new THREE.SphereGeometry(Math.sqrt(2) / 8, 64);
 
-    //   const a = Array(16).fill(0);
-    //   const b = Array(16).fill(0);
+      // create an empty array to  hold targets for the attribute we want to morph
+      // morphing positions and normals is supported
+      geometry.morphAttributes.position = [];
 
-    //   const VERT1 = 0.4;
-    //   const VERT2 = 0.2;
+      const positions = geometry.attributes.position;
+      const newPost = [];
 
-    //   let ab = [0, 0];
-    //   console.log(positions.count);
-    //   for (var i = 0; i < positions.count; i++) {
-    //     // tile
-    //     vec.fromBufferAttribute(positions, i);
-    //     let x = vec.x;
-    //     let y = vec.y;
-    //     let z = vec.z;
+      const vertex = new THREE.Vector3();
+      const direction = new THREE.Vector3(1, 0, 0);
+      const twistPositions = [];
 
-    //     if (x > 0 && y > 0) {
-    //       y += VERT2;
-    //       x += VERT2;
-    //     } else if (x > 0 && y < 0) {
-    //       y -= VERT2;
-    //       x += VERT2;
-    //     } else if (x < 0 && y > 0) {
-    //       y += VERT2;
-    //       x -= VERT2;
-    //     } else if (x < 0 && y < 0) {
-    //       y -= VERT2;
-    //       x -= VERT2;
-    //     }
+      console.log(sphereGeometry.attributes.position.count);
+      for (var i = 0; i < positions.count; i++) {
+        const x = positions.getX(i);
+        const y = positions.getY(i);
+        const z = positions.getZ(i);
 
-    //     const sliceIndex = getSliceIndex(x, y, z);
-    //     a[sliceIndex]++;
+        newPost.push(
+          x * Math.sqrt(1 - (y * y) / 2 - (z * z) / 2 + (y * y * z * z) / 3),
+          y,
+          z
+          // y * Math.sqrt(1 - (z * z) / 2 - (x * x) / 2 + (z * z * x * x) / 3),
+          // z * Math.sqrt(1 - (x * x) / 2 - (y * y) / 2 + (x * x * y * y) / 3)
+        );
+        // vertex.set(x * 2, y, z);
 
-    //     // if (sliceIndex === 0) {
-    //     //   x = VERT2;
-    //     //   y = -VERT1;
-    //     // } else if (sliceIndex === 1) {
-    //     //   x = VERT2;
-    //     // //   y = -VERT1;
-    //     // if (sliceIndex === 0 || sliceIndex === 15) {
-    //     //   // x = VERT1;
-    //     //   // x = -VERT1;
-    //     // } else if (sliceIndex === 12 || sliceIndex === 11) {
-    //     //   y = VERT1;
-    //     // } else if (sliceIndex === 4 || sliceIndex === 3) {
-    //     //   y = -VERT1;
-    //     // } else if (sliceIndex === 7 || sliceIndex === 8) {
-    //     //   x = VERT1;
-    //     // } else {
-    //     //   // x = 0;
-    //     //   // y = 0;
-    //     // }
+        // vertex
+        //   .applyAxisAngle(direction, (Math.PI * x) / 2)
+        //   .toArray(twistPositions, twistPositions.length);
+      }
 
-    //     newPost.push(x, y, z);
-    //   }
-    //   console.log(b);
+      geometry.morphAttributes.position = [
+        new THREE.Float32BufferAttribute(
+          sphereGeometry.attributes.position.array,
+          3
+        ),
+      ];
 
-    //   geometry.morphAttributes.position = [
-    //     new THREE.Float32BufferAttribute(newPost, 3),
-    //   ];
+      pupilRef.current.updateMorphTargets();
+    }, [pupilRef.current, crossGeo]);
 
-    //   pupilRef.current.updateMorphTargets();
-    // }, [pupilRef.current]);
-
-    // useFrame((_, d) => {
-    //   if (!pupilRef.current) return;
-
-    //   // Open the eyes
-
-    //   // pupilRef.current.morphTargetInfluences["x"] += d / 2;
-    // });
-
-    // useFrame(({ clock }) => {
-    //   if (!pupilRef.current) return;
-    //   pupilRef.current.morphTargetInfluences[0] =
-    //     Math.sin(clock.getElapsedTime() * 3) * 0.5 + 0.5;
-    // });
+    useFrame(({ clock }) => {
+      if (!pupilRef.current) return;
+      pupilRef.current.morphTargetInfluences[0] =
+        Math.sin(clock.getElapsedTime()) * 0.5 + 0.5;
+    });
 
     return (
       <mesh position={props.position} ref={ref}>
-        <sphereGeometry args={[0.2, 32, 32]} />
+        <sphereGeometry args={[0, 32, 32]} />
         <meshBasicMaterial color="#e8e8e8" />
 
         {/* Pupil */}
         <mesh
-          position={[0, 0, 0.125]}
+          position={[0, 0, 0.2]}
+          morphTargetInfluences={[0]}
+          geometry={crossGeo}
           ref={pupilRef}
-          // morphTargetInfluences={[0]}
         >
-          <sphereGeometry args={[0.1, 100, 100]} />
           <meshToonMaterial color="black" morphTargets />
           <mesh position={[0.025, 0.025, 0.075]}>
             <sphereGeometry args={[0.025, 32, 32]} />
