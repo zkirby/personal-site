@@ -36,25 +36,27 @@ export default function AboutMe() {
           <div className="text-left font-sans">
             <p className="mt-4 text-xl">Hi there.</p>
             <p className="mt-4 text-xl">
-              Thanks for stopping by and checking out my website. You won't find
-              much here except a collection of links and an enumaration of
-              things I'm currently interested in which will begin now: HCI and
-              the future of computer interfaces in an AI-first world, client
-              performance - both build and runtime, and{" "}
+              Thanks for stopping by. You won't find much here except a few
+              details about what I'm up to and maybe some relevant links. Let's
+              start with the links:{" "}
               <Highlight href="https://substack.com/@zkirby">
-                {" "}
-                writing
-              </Highlight>
-              .
+                writings
+              </Highlight>{" "}
+              and{" "}
+              <Highlight href="https://github.com/zkirby">github.</Highlight>
             </p>
             <p className="mt-4 text-xl">
-              Recently, I was the co-founder of{" "}
-              <Highlight href="https://www.vessel.dev/">Vessel</Highlight>, a
-              YC/venture backed startup with the tag line "We make it quick and
-              easy to add user-facing integrations to your SaaS product". It was
-              the most interesting thing I've done in my (short) career so far.
-              It was full of ups and downs and some lefts and one right... but
-              that's a story for another time.
+              As far as what I'm up to, recently I was the co-founder of{" "}
+              <Highlight href="https://www.vessel.dev/">Vessel</Highlight>. We
+              were a YC/venture backed startup with the tag line "We make it
+              quick and easy to add user-facing integrations to your SaaS
+              product". It was the most interesting thing I've done in my career
+              so far and was full of ups and downs and some lefts and one
+              right... but that's a story for another time.
+            </p>
+            <p className="mt-4 text-xl">
+              Right now I'm keeping myself busy exploring how digital interfaces
+              will be reshaped by AI.
             </p>
             <p className="mt-4 text-xl">
               I have a general distaste for social media of any kind. I do,
