@@ -1,5 +1,11 @@
 import { ThreeElements, useFrame, useThree } from "@react-three/fiber";
-import React, { forwardRef, useEffect, useMemo, useRef } from "react";
+import React, {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+} from "react";
 import { shouldCloseEyesAtom } from "../../state/sound.atoms";
 import { useAtom } from "jotai";
 import * as THREE from "three";
@@ -11,12 +17,51 @@ interface EyeProps {
   coords: { x: number; y: number };
 }
 
+function useAnimation(ref, keyframes) {
+  const mixer = useMemo(() => {
+    if (!ref.current) return;
+    return new THREE.AnimationMixer(ref.current);
+  }, [ref.current]);
+
+  const clip = useMemo(() => {
+    return new THREE.AnimationClip("Action", 1, keyframes);
+  }, keyframes);
+
+  const action = useMemo(() => {
+    if (!mixer || !clip) return;
+    const animationAction = new THREE.AnimationAction(mixer, clip);
+    animationAction.setLoop(THREE.LoopOnce);
+    animationAction.clampWhenFinished = true;
+    return animationAction;
+  }, [clip, mixer]);
+
+  useFrame((_, delta) => {
+    if (mixer) mixer.update(delta);
+  });
+
+  return {
+    play: useCallback(() => {
+      if (!action) return;
+      action.reset();
+      action.timeScale = 0.8;
+      action.play();
+    }, [action]),
+    reverse: useCallback(() => {
+      if (!action) return;
+      action.paused = false;
+      action.timeScale = -1.8;
+      action.play();
+    }, [action]),
+  };
+}
+
 const Eye = forwardRef(
   (props: EyeProps, ref: React.RefObject<ThreeElements["mesh"]>) => {
     const camera = useThree((p) => p.camera);
     const [shouldCloseEyes] = useAtom(shouldCloseEyesAtom);
 
     const pupilRef = useRef<THREE.Mesh>();
+    const crossRef = useRef<THREE.Mesh>();
 
     useEffect(() => {
       if (!props.coords || !ref.current) return;
@@ -31,11 +76,11 @@ const Eye = forwardRef(
     }, [ref?.current, props.coords]);
 
     const crossGeo = useMemo(() => {
-      const boxW = 0.1;
+      const boxW = 0.05;
       const boxH = 0.1;
-      const boxD = 0.5;
-      const geometry1 = new THREE.BoxGeometry(boxW, boxH, boxD, 100, 50);
-      const geometry2 = new THREE.BoxGeometry(boxW, boxH, boxD, 100, 50);
+      const boxD = 0.4;
+      const geometry1 = new THREE.BoxGeometry(boxW, boxH, boxD);
+      const geometry2 = new THREE.BoxGeometry(boxW, boxH, boxD);
 
       // Translate the second box to form the 'X' shape
       geometry2.rotateX(Math.PI / 2); // Rotate by 45 degrees
@@ -47,75 +92,62 @@ const Eye = forwardRef(
 
       combinedGeometry.rotateX(Math.PI / 4);
       combinedGeometry.rotateY(Math.PI / 2);
+
       return combinedGeometry;
     }, []);
 
+    // Pupil Animation
+    const { play: playPupil, reverse: reversePupil } = useAnimation(pupilRef, [
+      useMemo(
+        () =>
+          new THREE.VectorKeyframeTrack(
+            ".scale",
+            [0, 0.15],
+            [1, 1, 1, 0, 0, 0]
+          ),
+        []
+      ),
+    ]);
+    const { play: playCross, reverse: reverseCross } = useAnimation(crossRef, [
+      useMemo(
+        () =>
+          new THREE.VectorKeyframeTrack(
+            ".scale",
+            [0, 0.15],
+            [0, 0, 0, 1, 1, 1]
+          ),
+        []
+      ),
+    ]);
+
     useEffect(() => {
-      if (!crossGeo) return;
-      const geometry = crossGeo;
-      const squareGeometry = new THREE.BoxGeometry(0.2, 0.2, 0.2, 1, 1);
-      const sphereGeometry = new THREE.SphereGeometry(Math.sqrt(2) / 8, 64);
-
-      // create an empty array to  hold targets for the attribute we want to morph
-      // morphing positions and normals is supported
-      geometry.morphAttributes.position = [];
-
-      const positions = geometry.attributes.position;
-      const newPost = [];
-
-      const vertex = new THREE.Vector3();
-      const direction = new THREE.Vector3(1, 0, 0);
-      const twistPositions = [];
-
-      console.log(sphereGeometry.attributes.position.count);
-      for (var i = 0; i < positions.count; i++) {
-        const x = positions.getX(i);
-        const y = positions.getY(i);
-        const z = positions.getZ(i);
-
-        newPost.push(
-          x * Math.sqrt(1 - (y * y) / 2 - (z * z) / 2 + (y * y * z * z) / 3),
-          y,
-          z
-          // y * Math.sqrt(1 - (z * z) / 2 - (x * x) / 2 + (z * z * x * x) / 3),
-          // z * Math.sqrt(1 - (x * x) / 2 - (y * y) / 2 + (x * x * y * y) / 3)
-        );
-        // vertex.set(x * 2, y, z);
-
-        // vertex
-        //   .applyAxisAngle(direction, (Math.PI * x) / 2)
-        //   .toArray(twistPositions, twistPositions.length);
+      if (shouldCloseEyes) {
+        playPupil();
+        playCross();
       }
-
-      geometry.morphAttributes.position = [
-        new THREE.Float32BufferAttribute(
-          sphereGeometry.attributes.position.array,
-          3
-        ),
-      ];
-
-      pupilRef.current.updateMorphTargets();
-    }, [pupilRef.current, crossGeo]);
-
-    useFrame(({ clock }) => {
-      if (!pupilRef.current) return;
-      pupilRef.current.morphTargetInfluences[0] =
-        Math.sin(clock.getElapsedTime()) * 0.5 + 0.5;
-    });
+      if (!shouldCloseEyes) {
+        reversePupil();
+        reverseCross();
+      }
+    }, [shouldCloseEyes]);
 
     return (
       <mesh position={props.position} ref={ref}>
-        <sphereGeometry args={[0, 32, 32]} />
+        <sphereGeometry args={[0.2, 32, 32]} />
         <meshBasicMaterial color="#e8e8e8" />
 
         {/* Pupil */}
         <mesh
           position={[0, 0, 0.2]}
-          morphTargetInfluences={[0]}
           geometry={crossGeo}
-          ref={pupilRef}
+          ref={crossRef}
+          scale={[0, 0, 0]}
         >
-          <meshToonMaterial color="black" morphTargets />
+          <meshToonMaterial color="#b91c1b" opacity={0} />
+        </mesh>
+        <mesh position={[0, 0, 0.125]} ref={pupilRef} scale={[1, 1, 1]}>
+          <sphereGeometry args={[0.1, 32, 32]} />
+          <meshToonMaterial color="black" />
           <mesh position={[0.025, 0.025, 0.075]}>
             <sphereGeometry args={[0.025, 32, 32]} />
             <meshToonMaterial />

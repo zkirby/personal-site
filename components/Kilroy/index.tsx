@@ -182,7 +182,7 @@ function Scene() {
       <mesh position={[0, 0, 0]} ref={kilroyRef}>
         <planeGeometry args={[3.96, 1.74]} />
         <meshStandardMaterial map={kilroy} transparent={true} />
-        {/* <Eye coords={coords} position={[-0.375, 0.375, 0]} ref={leftEyeRef} /> */}
+        <Eye coords={coords} position={[-0.375, 0.375, 0]} ref={leftEyeRef} />
         <Eye coords={coords} position={[0.075, 0.375, 0]} ref={rightEyeRef} />
       </mesh>
     </>
