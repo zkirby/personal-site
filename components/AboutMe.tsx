@@ -1,5 +1,7 @@
 import { useSetAtom } from "jotai";
+import { RoughNotation } from "react-rough-notation";
 import React, { PropsWithChildren } from "react";
+
 import { laserEyesEnabledAtom } from "../state/sound.atoms";
 
 function Highlight({
@@ -11,16 +13,16 @@ function Highlight({
   const enabledLaserEyes = useSetAtom(laserEyesEnabledAtom);
 
   return (
-    <a
-      className="highlight"
-      target="_blank"
-      href={href}
-      onClick={(e) => e.stopPropagation()}
-      onMouseEnter={() => enabledLaserEyes(true)}
-      onMouseLeave={() => enabledLaserEyes(false)}
-    >
-      {children}
-    </a>
+    <RoughNotation type="highlight" color="rgb(255, 241, 118)" show>
+      <a
+        href={href}
+        onClick={(e) => e.stopPropagation()}
+        onMouseEnter={() => enabledLaserEyes(true)}
+        onMouseLeave={() => enabledLaserEyes(false)}
+      >
+        {children}
+      </a>
+    </RoughNotation>
   );
 }
 

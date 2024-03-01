@@ -11,30 +11,6 @@ body {
 }
 
 /* -------------------------------- */
-/* Supports custom highlight animation */
-.highlight {
-  position: relative;
-  color: #000;
-  text-decoration: none;
-}
-
-.highlight::after {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  width: 100%;
-  height: 25%;
-  left: 0;
-  bottom: 3px;
-  background-color: #fdff32;
-  transition: all 0.2s ease-in-out;
-}
-
-.highlight:hover::after {
-  height: 90%;
-}
-
-/* -------------------------------- */
 /* WebGl Scene */
 .three-scene {
   position: fixed !important;
