@@ -35,6 +35,9 @@ dependencies:
   lodash:
     specifier: ^4.17.21
     version: 4.17.21
+  markdown-to-jsx:
+    specifier: ^7.4.3
+    version: 7.4.3(react@18.0.0)
   next:
     specifier: ^14.1.0
     version: 14.1.0(react-dom@18.0.0)(react@18.0.0)
@@ -775,6 +778,15 @@ packages:
     hasBin: true
     dependencies:
       js-tokens: 4.0.0
+    dev: false
+
+  /markdown-to-jsx@7.4.3(react@18.0.0):
+    resolution: {integrity: sha512-qwu2XftKs/SP+f6oCe0ruAFKX6jZaKxrBfDBV4CthqbVbRQwHhNM28QGDQuTldCaOn+hocaqbmGvCuXO5m3smA==}
+    engines: {node: '>= 10'}
+    peerDependencies:
+      react: '>= 0.14.0'
+    dependencies:
+      react: 18.0.0
     dev: false
 
   /merge2@1.4.1:

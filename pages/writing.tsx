@@ -1,6 +1,6 @@
 import { RoughNotation } from "react-rough-notation";
 
-function Writings() {
+function Writing() {
   return (
     <div className="pt-[60px] text-xl font-sans flex justify-center">
       <div>
@@ -28,4 +28,4 @@ function Writings() {
   );
 }
 
-export default Writings;
+export default Writing;
