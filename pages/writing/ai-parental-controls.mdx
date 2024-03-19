@@ -1,7 +1,10 @@
 import Image from "next/image";
 import Img from "./img1.png";
+import Layout from "@/components/writings/Layout";
 
-<div className=" mt-20" />
+<div className="mt-20" />
+
+<Layout>
 
 # AI Parental Controls: Using LLMs for Context-Dependent Self-Moderation with Transformer.js
 
@@ -18,7 +21,10 @@ In theory, this is exactly what an LLM should be capable of. In practice, I was 
 I started with a simple prompt that defined my learning goals and asked the LLM to only allow relevant educational content:
 
 ```tsx
-Pretend that I am a child and I want to watch a video. You are my parent and are responsible for ensuring that I stay productive and only watch videos that would be beneficial to my learning.
+Pretend that I am a child and I want to watch a video.
+You are my parent and are responsible for ensuring that I stay productive and only
+watch videos that would be beneficial to my learning.
+
 Right now I am learning about:
 - Transformers, LLMs, Linear Algebra, and other related topics.
 - React, TypeScript, and other related topics.
@@ -94,3 +100,5 @@ What I found to be significantly more compelling is the complete offloading, the
 - In this way, I don’t have to context switch at perceptual level and can instead focus solely on the task at hand.
 - In this particular scenero, I don’t want to have to decide if a given video.
 - The vast majority of videos
+
+</Layout>

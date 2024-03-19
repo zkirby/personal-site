@@ -23,11 +23,12 @@ function Writing() {
             Writings
           </RoughNotation>
         </h1>
-        <ul className="list-disc ml-5 mt-5">
+        <ul className="list-disc relative left-5 top-5">
           <li>
             <a href={`/writing/ai-parental-controls`}>
-              AI Parental Controls: Using LLMs for Context-Dependent
-              Self-Moderation with Transformer.js
+              <span className="text-red-700">(03/18/24)</span> AI Parental
+              Controls: Using LLMs for Context-Dependent Self-Moderation with
+              Transformer.js
             </a>
           </li>
         </ul>
