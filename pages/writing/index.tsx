@@ -8,7 +8,7 @@ import { RoughNotation } from "react-rough-notation";
  */
 function Writing() {
   return (
-    <div className="pt-[60px] text-xl font-sans ml-40">
+    <div className="pt-[60px] text-xl font-sans mx-40">
       <div>
         {/* Wrapping div needed to get rough notations properly aligned */}
         <h1 className="w-fit">

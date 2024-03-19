@@ -1,104 +1,131 @@
 import Image from "next/image";
-import Img from "./img1.png";
-import Layout from "@/components/writings/Layout";
 
-<div className="mt-20" />
+import Layout from "@/components/writings/Layout";
+import ChatImage from "./ai-parental-controls/Screenshot_2024-03-18_at_9.37.04_PM.png";
+import DirectImage from "./ai-parental-controls/Screenshot_2024-03-18_at_9.43.30_PM.png";
 
 <Layout>
 
-# AI Parental Controls: Using LLMs for Context-Dependent Self-Moderation with Transformer.js
+# AI Parental Controls: Using LLMs for Context-Dependent Self-Moderation (w/ Transformer.js)
 
-I recently hit a roadblock on my odyssey towards social media abstinence. My slash-and-burn technique of all-out blocking YouTube access turned out to be more harmful to my productivity than helpful. This was because, perhaps unsurprisingly, interspersed between Mr Beast spectacles and Minecraft play-alongs is a whole host of genuinely useful educational content. As a visual learner, I found myself at a particular disadvantage without access to the occasional explainer video.
+I recently hit a roadblock on my odyssey towards social media abstinence. [My slash-and-burn technique](https://zkirby.substack.com/p/diet-youtube) of all-out blocking YouTube access turned out to be more harmful than helpful for my productivity. As it turns out, perhaps unsurprisingly, interspersed between Mr Beast spectacles and Minecraft play-alongs is a whole host of genuinely useful educational content. And, as a visual learner, I found myself at a particular disadvantage without access to the occasional explainer video. I began searching for an alternative solution.
 
-My first instinct was to white-list specific channels that I knew made educational-leaning content (3blue1brown, Jack Herrington, etc). This quickly proved to be inefficient as soon as I needed an explanation on a topic outside of their domain. Within a week, I had a whitelist long enough to no longer make it useful. Next, I tried just downloading the occasional video I needed via [yt-dl](https://github.com/yt-dlp/yt-dlp). This worked for a while, but I found it required far too much self-constraint for my liking and I quickly abandoned it.
+My first instinct was to white-list specific channels that I knew made educational-leaning content (3blue1brown, Jack Herrington, etc) through a simple [Tapermonkey script](https://www.tampermonkey.net/). The issue arose when I needed to watch a video on a topic outside of their domain. Within a week, I had a whitelist long enough to no longer make it useful. Next, I tried downloading the occasional video I needed via [yt-dlp](https://github.com/yt-dlp/yt-dlp). This worked for a while, but I found it required far too much self-constraint for my liking and I quickly abandoned it.
 
-What I needed was something intellegent enough to distinguish educational content from pure entertainment without needing maintenance or action on my part. In a way, I needed a more sophisticated form of parental controls; one where my particular evolving learning goals would be taken into account when evaluating if a given video was suitable for viewing.
+What I needed was something that would vet a given YouTube video automatically, without manual intervention or maintenance. As a baseline, the tool should be able to distinguish educational content from entertainment, but I also wanted this tool to take my particular learning goals into consideration so I didn’t ‘accidentally’ wind up on a tangent of unrelated educational content (e.g., the Roman Empire).
 
-In theory, this is exactly what an LLM should be capable of. In practice, I was skeptical since the line between education and entertainment is invariably blurry on YouTube, but I was curious to see how well an LLM would work for this use case so I ran the experiment anyway.
+In theory, this sounded like something an LLM should be capable of. In practice, I was skeptical since the line between education and entertainment is invariably blurry on YouTube. Nonetheless, I was curious to see how well the latest string of LLMs would work for this use case.
 
-### Experiment
+## Experiment
 
-I started with a simple prompt that defined my learning goals and asked the LLM to only allow relevant educational content:
+### Version 1 - Chat
+
+I started with a simple prompt that defined my learning goals and asked the LLM to only allow ‘relevant’ educational content:
 
 ```tsx
-Pretend that I am a child and I want to watch a video.
-You are my parent and are responsible for ensuring that I stay productive and only
-watch videos that would be beneficial to my learning.
+You are responsible for ensuring that I stay productive and only watch videos that would be beneficial to my learning.
 
 Right now I am learning about:
 - Transformers, LLMs, Linear Algebra, and other related topics.
 - React, TypeScript, and other related topics.
 - WebGl, Three.js, and other related topics.
 
-You may respond with one of the following and **nothing else**:
-"Yes" - if the video is allowed
-"No" - if the video is not allowed
+If you think the video should be allowed, please respond with "I'll allow it".
 ```
 
 My first instinct was to load an LLM with that prompt, some context about the video (title, description, etc), and then block the video behind a chat interface.
 
 For each video, I would then have to plead my case for why I thought the video was appropriate to watch. The LLM, acting like a benevolent parental guardian, would either accept or deny my request.
 
-I threw together a small script, loaded it into Tapermonkey, and hit the ground running.
+I [threw together a small script](https://github.com/zkirby/productivity/blob/main/tapermonkey/scripts/youtube-regulator/ai-user-input/index.tm.ts), loaded it into Tapermonkey, and hit the ground running.
 
-![Screenshot 2024-03-02 at 5.43.55 PM.png](controls/Screenshot_2024-03-02_at_5.43.55_PM.png)
+<Image src={ChatImage} className="m-auto" alt="chat with an LLM" />
 
 With more sophisticated models, like the GPT-4 series, this worked surprisingly well. More often than not, I agreed with the decision the LLM made to block or unblock a given video. However, there were two major challenges with this approach:
 
-1. The chat interface was unbearably clunky and frustrating. The overhead to going back and forth with a model to plead my case, only to get denied (even if rightly so) was annoying enough for me to not want to use the extension.
-2. Conversations with smaller, but cheaper, models (like GPT-3.5-turbo) quickly devolved. Sometimes the model would loose the context and the chat would derail, other times the model thought _I_ was the one determining if the video could be viewed and would start pleading the case for why it should be allowed to view the video.
+1. The chat interface was unbearably clunky and frustrating. The overhead of going back and forth with a model to plead my case, only to get denied (even if rightly so) was annoying enough for me to not want to use the extension.
+2. Conversations with smaller, but cheaper, models (like GPT-3.5-turbo) quickly devolved. Sometimes the model would lose the context and the chat would derail, other times the model thought I was the one determining if the video could be viewed and would start pleading the case for why it should be allowed to view the video.
 
-For those reasons, I abandoned the chat interface relatively quickly in favor of just letting the LLM reason directly and then approve or deny the video. This came with the trade off of not being able to reason with the LLM or see why it decided a video should be blocked (which was helpful for improving the prompt). But, the speed and ease of use of just having the LLM decide on its own more than made up for the lack of visibility.
+### Version 2 - Direct
 
-This worked surprisingly well. So much so that I didn’t notice a difference between reasoning with the LLM and having it decide on its own. In hindsight, I’m not actually sure how often I convinced it to change its mind in the chat interface version. I, un-scientifically, failed to record those instances when I did convince it to let me view a video, but if memory serves, they were rare.
+For those reasons, I abandoned the chat interface relatively quickly in favor of just letting the LLM directly [approve or deny the video without user input](https://github.com/zkirby/productivity/blob/main/tapermonkey/scripts/youtube-regulator/ai-no-user-input/index.tm.ts). This came with the trade-off of not being able to reason with the LLM, or see why it decided a video should be blocked (which was helpful for improving the prompt), but the speed and ease of use more than made up for the lack of visibility.
 
-Of course, larger LLMs were better than the smaller ones, but I found myself less frustrated on the whole without the friction of the chat interface. I was mostly satisfied with extension except for two flaws:
+I removed the chat interface in favor of a floating ‘status’ pill and tweaked the end of the prompt very slightly to:
 
-1. ‘Educational’ content that had clickbaity titles (example) wouldn’t pass the LLM since it didn’t have the context about the actual video content.
-2. I hated the idea of paying (however small) to view a video. I had indirectly turned YouTube into a paid service and I didn’t like that thought.
+```tsx
+You may respond with one of the following **and nothing else**:
+"Yes" - if the video is allowed
+"No" - if the video is not allowed
+```
 
-To help with the first issue, I tried supplying the video transcript. For longer videos, this proved to be challenging since the context could be too large for the smaller LLMs to reason about or the context window might be too small entirely. In the end, I landed on supplying a set amount of the video transcript. This had a small, but noticeable, improvement in the LLMs ability to vet a given video. If I’d had more time, I would have experimented with different transcript sampling techniques (e.g., random snippets) or ran the transcript through a different LLM to summarize it first.
+<Image src={DirectImage} className="m-auto" alt="approved status icon" />
 
-To mitigate the second issue, I used `transformers.js` to load the models directly in the browser. I’m sure you can guess that this made the extension _significantly_ slower and, since the models weren’t as good, all around less useful. In all honesty, I never quite got this to be good enough to replace even GPT-3.5. If I had more time, I would have experimented with using better models or tweaking the prompt.
+I wanted to be slightly more rigorous in my testing so I compiled two lists of videos that I thought should [pass](https://www.youtube.com/playlist?list=PLHC5hfbtF7BfrRvvreSwcjYvOdc9WvhdN) and [fail](https://www.youtube.com/playlist?list=PLHC5hfbtF7BePbN7_prikMISWpGRNzdSJ) the filter.
 
-### Results
+The results were nearly identical to the first version except now I didn’t have to chat with the LLM first. In hindsight, I’m not actually sure how often I convinced the LLM to change its mind in the chat interface version. I, un-scientifically, failed to record those instances when I did convince it to let me view a video but they were rare.
 
-In the end, I was quite pleased with how well using an LLM as a context-dependent personalized content filter worked. But, after a week of daily usage, I ended up disabling the extension and went back to an all-out weekday YT ban. The reason was primarily because:
+At this point, I was mostly satisfied with the extension except for two major flaws:
 
-1. YouTube is free and using this extension was not. It’s not particularly expensive (\<$2 a week) but it’s not free and I was very cognizant of that while browsing. As LLMs become more cost-effective, I imagine this will be less of an issue.
-2. The line between ‘educational’ and ‘entertaining’ content is far too blurry to achieve my real goal of improving my personal productivity. I found myself binging 3blue1brown videos in the same way I would other types of content; bringing me to question how much I was ‘learning’ vs just mindlessly watching.
+1. ‘Educational’ content that had clickbaity titles wouldn’t pass the LLM since it didn’t have the context about the actual video content. On the other hand, videos that seemed relevant but weren’t (like this one on “[AI taking over](https://www.youtube.com/watch?v=mNWs5-UnVyY&list=PLHC5hfbtF7BePbN7_prikMISWpGRNzdSJ&index=9&t=42s)”) did pass.
+2. I had indirectly turned YouTube into a paid service and I hated the idea of paying (however small) to view a video.
 
-### Concluding Thoughts
+To mitigate the first issue, I tried [supplying the video transcript](https://github.com/zkirby/productivity/blob/main/tapermonkey/scripts/youtube-regulator/ai-no-user-input-w-transcript/models/gpt.ts). For longer videos, this proved to be challenging since the context could be too large for the smaller LLMs to reason about or the context window might be too small entirely. This had a small, but noticeable, improvement in the LLM's ability to vet a given video for the smaller models with larger windows like GPT-3.5-Turbo. If I’d had more time, I would have experimented with different transcript sampling techniques (e.g., random snippets) or run the transcript through a different LLM to summarize it first.
 
-I strongly believe there is real promise in prompt-level customized LLMs as background decision agents. There are many forms of higher level, non-monotonous, cognitive thinking that we have yet to offload to LLMs. In this particular exercise, I was concerned with the idea of _will power_. That is, can a reasonably sophisticated LLM be a suitable […] for my own will power. Is there a world where I no longer need self-accountability and self-monitoring because, with a well tailored prompt, an LLM can make those decisions for me? Can an LLM, with my best interests in mind, alleviate the ‘burden’ of will power?
+To help with the second issue, I used [transformers.js](https://huggingface.co/docs/transformers.js/en/index) to load models I could run for free directly in the browser. I’m sure you can guess that this made the extension _significantly_ slower and, since the models weren’t as good, all around less useful. I iterated through a few different models (`Xenova/LaMini-Flan-T5-783M` seemed to work the best) but in all honesty, I never quite got this to be good enough to replace even GPT-3.5. If I had more time, I would have experimented with using better models or tweaking the prompt.
 
-I don’t know. But, I hope this excise illuminates for you, as it did for me, the idea that it is a possibility. I see a world where, after understanding and absorbing your life goals, an LLM, like guard rails, ensures you’re always heading in the right direction. Constantly molding your digital world to show you just the right kind of content or ensure you’re aware of the right opportunities at exactly the right time in your life. Of course, unless said LLM is benevolent, that’s an intensely dystopian idea that surely would never ever ever happen. Right?
+## Results
 
----
+Here are the results of running each of the final variations (no-transcript, no-chat, temperature at 0) through the two test lists of videos:
 
-An often underappreciated facet of having an easily accessible, and increasingly intelligent, reasoning machine is the ability to defer some types of higher cognitive thinking.
+<table className="w-full border-collapse font-body text-lg border border-gray-200 shadow-md mt-3">
+  <thead>
+    <tr className="border-b border-gray-200">
+      <th></th>
+      <th className="bg-gray-100 text-gray-800 uppercase font-semibold">
+        GPT-4
+      </th>
+      <th className="bg-gray-100 text-gray-800 uppercase font-semibold">
+        GPT-3.5-turbo
+      </th>
+      <th className="bg-gray-100 text-gray-800 uppercase font-semibold">
+        Local Models
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr className="border-b border-gray-200">
+      <th scope="row" className="py-2 px-4 font-semibold text-gray-800">
+        Should Fail
+      </th>
+      <td className="py-2 px-4">100%</td>
+      <td className="py-2 px-4">50%</td>
+      <td className="py-2 px-4">25%</td>
+    </tr>
+    <tr className="border-b border-gray-200">
+      <th scope="row" className="py-2 px-4 font-semibold text-gray-800">
+        Should Pass
+      </th>
+      <td className="py-2 px-4">100%</td>
+      <td className="py-2 px-4">88%</td>
+      <td className="py-2 px-4">75%</td>
+    </tr>
+  </tbody>
+</table>
+<div className="text-sm text-gray-500 mt-2 text-center">
+  Percentage of videos correctly passed or failed
+</div>
 
-[…]
+Keep in mind this is by no means a rigorous study considering there were only 8 videos in the list. Even so, GPT-4 was actually quite good at filtering the videos purely from a description, a title, and a list of topics I’m learning about.
 
-Recently, I’ve been on a quest to limit the usage of YouTube in my daily life. Initially, I tried a pure slash and burn strategy, gradually limiting and then removing my activity over the course of a month. What I found, unsurprisingly, is that there are real situations in which I want or need to watch a YouTube video.
+In the end, I was quite pleased with how well using an LLM as a personalized content filter worked. But, after a week of daily usage on the GPT-4 version, I ended up disabling the extension and went back to an all-out weekday YT ban. The reason was primarily because:
 
-This is by no means meant to be … but rather a case study on
+1. YouTube is free and using this extension was not. Actually, it was pretty expensive (especially when I had transcripts turned on). A week of usage cost me about $2 or $104 a year! As LLMs become more cost-effective, I imagine this will be less of an issue.
+2. The line between ‘educational’ and ‘entertaining’ content is far too blurry to achieve my real goal of improving my personal productivity. I found myself binging ‘educational’ content that met my learning goals in the same way I would more entertainment-focused content.
 
-<Image src={Img} className="md:w-[850px] m-auto" />
+## Conclusion
 
-![Screenshot 2024-03-02 at 5.38.11 PM.png](blog/AI%20Parental%20Controls%20Using%20LLMs%20for%20Context-Depend%205c06e3fe1fea454999ea22fb8970714a/Screenshot_2024-03-02_at_5.38.11_PM.png)
+I strongly believe there is real promise in prompt-level customized LLMs as background decision agents. There are many forms of higher-level, non-monotonous, cognitive thinking that we have yet to offload to LLMs. In this particular exercise, I was concerned with the idea of _willpower_. That is, can a reasonably sophisticated LLM be a suitable substitute for my own willpower and self-control. Is there a world where I no longer need self-accountability and self-monitoring because, with a well-tailored prompt, an LLM can make those decisions for me? Can an LLM, with my best interests in mind, alleviate the ‘burden’ of staying on task in a noisy digital world?
 
-![Screenshot 2024-03-02 at 5.46.57 PM.png](blog/AI%20Parental%20Controls%20Using%20LLMs%20for%20Context-Depend%205c06e3fe1fea454999ea22fb8970714a/Screenshot_2024-03-02_at_5.46.57_PM.png)
-
-Two methods of implementation:
-
-- Engaging with the AI
-
-What I found to be significantly more compelling is the complete offloading, the AI decides or does not decide. And I can tune it further - using a simplified version of RAG.
-
-- What I’m interested in is offloading specific modes of cognitive thinking to an AI.
-- In this way, I don’t have to context switch at perceptual level and can instead focus solely on the task at hand.
-- In this particular scenero, I don’t want to have to decide if a given video.
-- The vast majority of videos
+I don’t know. But, I hope this exercise illuminates for you, as it did for me, that it is a possibility. I see a world where, after understanding and absorbing your life goals, an LLM ensures you’re always on task; constantly molding your digital world to ensure you stay focused and ‘on track’.
 
 </Layout>
