@@ -52,7 +52,7 @@ export default function AboutMe() {
           Thanks for stopping by. You won't find much here except a few details
           about what I'm up to and maybe some relevant links. Let's start with
           the links:{" "}
-          <Highlight href="/writings" internalLink>
+          <Highlight href="/writing" internalLink>
             writings
           </Highlight>{" "}
           and <Highlight href="https://github.com/zkirby">github.</Highlight>

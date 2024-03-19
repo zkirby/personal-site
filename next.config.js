@@ -1,4 +1,7 @@
-module.exports = {
+const withMDX = require("@next/mdx")();
+
+/** @type {import('next').NextConfig} */
+module.exports = withMDX({
   reactStrictMode: true,
   typescript: {
     // !! WARN !!
@@ -7,4 +10,5 @@ module.exports = {
     // !! WARN !!
     ignoreBuildErrors: true,
   },
-};
+  pageExtensions: ["js", "jsx", "mdx", "ts", "tsx"],
+});
