@@ -1,8 +1,7 @@
 import type { MDXComponents } from "mdx/types";
 import cn from "classnames";
-import Image from "next/image";
 
-const SPACING = "py-3";
+const SPACING = "mb-3";
 const FONT = "font-body leading-relaxed text-lg";
 
 /**
@@ -27,16 +26,22 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ol: ({ children }) => (
       <ol className={cn(FONT, "list-decimal left-5 relative")}>{children}</ol>
     ),
+    ul: ({ children }) => (
+      <ol className={cn(FONT, "list-disc left-5 relative")}>{children}</ol>
+    ),
     p: ({ children }) => <p className={cn(SPACING, FONT)}>{children}</p>,
     pre: ({ children }) => (
       <pre
         className={cn(
           SPACING,
-          "bg-gray-100 px-4 rounded-lg shadow whitespace-pre-wrap"
+          "bg-gray-100 px-4 py-2 rounded-lg shadow whitespace-pre-wrap"
         )}
       >
         {children}
       </pre>
+    ),
+    code: ({ children }) => (
+      <code className={cn("text-sm bg-gray-100 p-1 rounded")}>{children}</code>
     ),
     a: ({ children, href }) => (
       <a

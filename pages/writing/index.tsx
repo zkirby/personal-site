@@ -1,5 +1,19 @@
 import { RoughNotation } from "react-rough-notation";
 
+const ARTICLES = [
+  {
+    title: "Intra-language Translators",
+    date: "03/24/24",
+    path: "/writing/intra-language-translators",
+  },
+  {
+    title:
+      "AI Parental Controls: Using LLMs for Context-Dependent Self-Moderation with Transformer.js",
+    date: "03/18/24",
+    path: "/writing/ai-parental-controls",
+  },
+];
+
 /**
  * The blogs are added manually using next's built in mdx support so that they
  * can be easily copy and pasted from notion.
@@ -24,13 +38,14 @@ function Writing() {
           </RoughNotation>
         </h1>
         <ul className="list-disc relative left-5 top-5">
-          <li>
-            <a href={`/writing/ai-parental-controls`}>
-              <span className="text-red-700">(03/18/24)</span> AI Parental
-              Controls: Using LLMs for Context-Dependent Self-Moderation with
-              Transformer.js
-            </a>
-          </li>
+          {ARTICLES.map((article) => (
+            <li key={article.title} className="mb-5">
+              <a href={article.path}>
+                <span className="text-red-700">({article.date})</span>{" "}
+                {article.title}
+              </a>
+            </li>
+          ))}
         </ul>
       </div>
     </div>

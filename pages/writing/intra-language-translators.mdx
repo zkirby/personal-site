@@ -1,0 +1,32 @@
+import Image from "next/image";
+
+import Layout from "@/components/writings/Layout";
+import TranslatorImage from "./assets/intra-language-translators/translator.png";
+
+<Layout>
+
+# Intra-language Translators
+
+While working through the Atomic Prompts exercise, I had a thought. Can an LM perform a set of abstract transformations that would map a body of text from any given linguistic domain (e.g., academic math papers) to any other (e.g., the sum total of everything I already know) without loss of meaning?
+
+In theory, if done correctly, the mapping would produce a body of text that is self-contained and doesn’t need supporting material. That is, without further research or assistance, one should be able to comprehend any given text after it has undergone such a transformation. I don’t just mean that you should be able to read every word in the text without needing a dictionary, I mean that you should be able to fully _understand_ the material.
+
+Of course, the depth and verbosity of the text might change to an incomprehensible depth after the transformation - e.g., if we mapped a math research paper to a domain a 4th grader understands, it might include an enormous pretext of pre-requisite basic mathematics. Nonetheless, it should be possible and especially useful if the starting domain is close to the goal domain.
+
+In this way, what I’m interested in is a translator; but not an **inter**-language translator, an **intra**-language translator. This translator, given any body of text and a deep understanding of the target audience (with varying levels of fidelity depending on the size and diversity of the target audience), would be able to translate the text in such a way that it maximizes the comprehensibility and approachability of the text for the recipient.
+
+For instance, LLMs have already been shown to make [writing scientific analogies for a general audience easier](https://dl.acm.org/doi/pdf/10.1145/3563657.3595996). Imagine if, instead of choosing a general metaphor (e.g., the nucleus is like a dictionary), the LLM dynamically constructed a more illustrative metaphor by leveraging the pre-existing knowledge of the reader (e.g., the Nucleus is like a CPU).
+
+Put in picture form:
+
+<Image
+  src={TranslatorImage}
+  className="m-auto"
+  alt="An Intra-language translator"
+/>
+
+The power of such a system is undeniable. Obviously it would make learning new material easier, but I think a much more powerful use case would be its application in everyday life. For instance, imagine if you had a personal, on-machine, LLM that translated your slack messages, emails, and daily reading on demand. Such a system would drastically reduce frustration from not ‘understanding’ a message from a coworker or technical material you encounter. Conversely, it would also allow you to more easily express your thoughts since your language choices and metaphors wouldn’t be confined to ones your audience understands.
+
+Taken to an extreme, if everyone possessed such a system, new language patterns might emerge in unexpected ways. For instance, language would experience an explosion in diversity. Over time, grammar and vocabulary might become extremely nuanced and uniquely suited to a single individual. This would maximize a person's ability to articulate their thoughts and understand others. Furthermore, in some cases, the way people communicate might not look like language at all but rather some odd combination of sounds and visuals that expresses their inner thoughts in ways that were previously impossible.
+
+</Layout>

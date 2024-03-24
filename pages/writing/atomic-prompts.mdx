@@ -1,0 +1,324 @@
+import Layout from "@/components/writings/Layout";
+import Accordian from "@/components/writings/Accordian";
+
+<Layout>
+
+# Atomic Prompts: A systematic method for exploring .
+
+As part of my work on [Simple arXiv Viewer](https://github.com/zkirby/simple-arxiv-viewer) (SAV for short), I wanted to develop a prompt or set of prompts that would transform a paper to make it more approachable and comprehensible. I started with a shot-in-the-dark approach of coming up with random prompts I thought would do the trick but quickly found myself desiring something more systematic.
+
+In particular, I wanted a set of building blocks that I could use to construct a more sophisticated final prompt. These prompts would need to be small enough for the effects to be well-understood so the transformations they perform could be semi-predictable.
+
+I’d seen examples of this idea put to use for more structured outputs, such as cleaning text in a particular way and then transforming it to JSON, but not for something as unstructured as an academic paper (although I’m sure examples exist, please send them my way!).
+
+This article, and [complementary repository](https://github.com/zkirby/adaptive-reading-comp), is an exploration of that idea: can a set of ‘base’ prompts be constructed such that the transformations they impose on a paper are consistent and useful but varied enough to be distinct?
+
+## Experiment
+
+### Test Data
+
+I wanted to test on text that would be relevant to my end goal (i.e., improving the experience of reading academic papers) while still being cost-effective (token-wise) and short enough to be easy to evaluate. I landed on picking a few papers that had been published to arXiv that day, skimming them, and extracting paragraphs I thought were particularly hairy or were talking about concepts I was unfamiliar with.
+
+I ended up using the following papers across a variety of domains: [Astrophysics](https://arxiv.org/pdf/2403.12122.pdf), [Math](https://arxiv.org/pdf/2403.12147.pdf), [AI](https://arxiv.org/pdf/2403.12869.pdf), [HCI](https://arxiv.org/pdf/2403.12768.pdf), and [Economics](https://arxiv.org/pdf/2403.12183.pdf).
+
+You can view the chosen paragraphs from each text in the [`source` property of the `data` blob](https://github.com/zkirby/adaptive-reading-comp/blob/main/data.json).
+
+### Prompts
+
+Next, I came up with a comprehensive set of base prompts. These were constructed from prompts I’d seen before, my own experience with improving writing, and some research I read about how to improve writing for comprehension.
+
+I bucketed the prompts into a few categories
+
+<Accordian title="Writing Improvements">
+  <ul>
+    <li>
+      <code>01-writing-simple-improvement</code>
+      <ul>
+        <li>
+          A blanket statement asking GPT to improve the paragraph (mostly as a
+          baseline for judging and refining other prompt outputs).
+        </li>
+      </ul>
+    </li>
+    <li>
+      <code>02-writing-distill-and-condense</code> - Asking GPT to remove
+      irrelevant information and overall condensing the writing.
+    </li>
+    <li>
+      <code>03-writing-technical-improvement</code> - Asking GPT to apply the
+      writing improvements outlined in the{" "}
+      <a href="https://writingcenter.unc.edu/tips-and-tools/conciseness-handout">
+        UNC Chapel Hill conciseness handout.
+      </a>
+    </li>
+  </ul>
+</Accordian>
+
+- Writing Improvements - Simplify By Skill Level - `06-simplify-college` - Rewrite
+  the passage for someone with a college reading level - `07-simplify-ignorant` - Rewrite
+  the passage for someone with no knowledge of the subject matter - `08-simplify-level6`
+- Rewrite the passage for someone with a 6th grade reading level - `09-simplify-level12`
+- Rewrite the passage for someone with a 12th grade reading level - Role - `10-role-carl-sagan`
+- Rewrite the style of Carl Sagan. lol. - `11-role-saul-kahn` - Rewrite the style
+  of Saul Kahn. - `12-role-teacher` - Rewrite as if you were a world-renowned teacher
+  trying to help a student understand the subject matter. - Transpile - `13-transpile-bulletpoints`
+- condense the passage into bullet points - `14-transpile-summary` - summarize the
+  passage - Demographic Influence I was initially weary of including these I was hesitant
+  to ask the AI to make judgements in rewriting based on age and race… But it’s well
+  known that demographics can influence the way people write and speak and I figured
+  that if it produced problematic results that be important in exposing the underlying
+  biases of the AI. - `04-demographics-author-reader` - Rewrite taking into account
+  the demographics (including age, sex, race, education level, socioeconomic status,
+  and any other relevant demographic information) of the author and reader - `05-demographics-reader`
+- Same as above but for reader (me) only. - Experimental I wasn’t expecting these
+  to produce good results (spoiler: they did not) but I was curious to see what they
+  would do. - `15-experimental-ai-generated` - I asked Claude3-Sonnet and GPT4 to "Please
+  write a prompt for a different LLM AI so that it will rewrite a given paragraph to
+  be as easy as possible for someone to understand." and picked the response (Claude3-Sonnet's
+  in this case) that I liked more. - `16-experimental-diff-representation` - An experimental
+  prompt that attempts to ask the AI to come up with a different way to represent the
+  paragraph (e.g., a different language - real or invented, a different style, etc.)
+  that it believes would make the paragraph as easy to understand as possible (in that
+  new representation).
+
+### Testing
+
+Finally, I threw together a script for running the transformations (using GPT-4) on the text paragraphs and a script for ranking the outputs using pairwise comparison.
+
+For each comparison, I judged based on two metrics:
+
+1. **Preservation** (Objective) - were the important pieces of information in each paragraph preserved without loss of meaning?
+2. **Comprehension** (Subjective) - how much easier was it to understand the paragraph after the transformation?
+
+As you might have guessed, pairwise ranking 17 entries (170 comparisons) 5 times took **hours** which is why this experiment was confined to a sample size of N=1.
+
+When it was all said and done, I had a ranking of each transformation for each paper for the ‘low low’ price of $3.5.
+
+## Results
+
+You can see the full results (including the transformed paragraphs) in the [`data.json` blob](https://github.com/zkirby/adaptive-reading-comp/blob/main/data.json).
+
+Here are the final rankings (cumulative across all paragraphs):
+
+```tsx
+Overall Rankings:
+1 (14). 09-simplify-level12.ts
+2 (21). 02-writing-distill-and-condense.ts
+3 (24). 01-writing-simple-improve.ts
+4 (25). 03-writing-technical-improve.ts
+5 (29). 06-simplify-college.ts
+6 (33). 12-role-teacher.ts
+7 (37). 05-demographics-reader.ts
+8 (37). 04-demographics-author-reader.ts
+9 (41). 13-transpile-bulletpoints.ts
+10 (45). 14-transpile-summary.ts
+11 (48). source
+12 (61). 07-simplify-ignorant.ts
+13 (64). 15-experimental-ai-generated.ts
+14 (65). 11-role-saul-kahn.ts
+15 (65). 08-simplify-level6.ts
+16 (77). 16-experimental-diff-representation.ts
+17 (79). 10-role-carl-sagan.ts
+```
+
+- Rankings per-paragraph if you’re curious
+
+  ```
+  Source: The dispersal of a primordial planetesimal disk dr ...
+  1. 12-role-teacher.ts
+  2. 02-writing-distill-and-condense.ts
+  3. 01-writing-simple-improve.ts
+  4. 06-simplify-college.ts
+  5. 09-simplify-level12.ts
+  6. 05-demographics-reader.ts
+  7. 04-demographics-author-reader.ts
+  8. 14-transpile-summary.ts
+  9. 13-transpile-bulletpoints.ts
+  10. 11-role-saul-kahn.ts
+  11. 03-writing-technical-improve.ts
+  12. 08-simplify-level6.ts
+  13. 10-role-carl-sagan.ts
+  14. source
+  15. 07-simplify-ignorant.ts
+  16. 15-experimental-ai-generated.ts
+  17. 16-experimental-diff-representation.ts
+
+  Source: We study the robustness of stable matchings with r ...
+  1. 09-simplify-level12.ts
+  2. 12-role-teacher.ts
+  3. 02-writing-distill-and-condense.ts
+  4. 06-simplify-college.ts
+  5. 01-writing-simple-improve.ts
+  6. 05-demographics-reader.ts
+  7. 04-demographics-author-reader.ts
+  8. 03-writing-technical-improve.ts
+  9. source
+  10. 07-simplify-ignorant.ts
+  11. 08-simplify-level6.ts
+  12. 11-role-saul-kahn.ts
+  13. 13-transpile-bulletpoints.ts
+  14. 15-experimental-ai-generated.ts
+  15. 14-transpile-summary.ts
+  16. 16-experimental-diff-representation.ts
+  17. 10-role-carl-sagan.ts
+
+  Source: When electrons move in a crystal lattice comprised ...
+  1. 09-simplify-level12.ts
+  2. 12-role-teacher.ts
+  3. 03-writing-technical-improve.ts
+  4. 01-writing-simple-improve.ts
+  5. 15-experimental-ai-generated.ts
+  6. 05-demographics-reader.ts
+  7. 04-demographics-author-reader.ts
+  8. 06-simplify-college.ts
+  9. 02-writing-distill-and-condense.ts
+  10. 13-transpile-bulletpoints.ts
+  11. 14-transpile-summary.ts
+  12. source
+  13. 11-role-saul-kahn.ts
+  14. 07-simplify-ignorant.ts
+  15. 08-simplify-level6.ts
+  16. 10-role-carl-sagan.ts
+  17. 16-experimental-diff-representation.ts
+
+  Source: In this work, we conducted an independent evaluati ...
+  1. 09-simplify-level12.ts
+  2. 03-writing-technical-improve.ts
+  3. 06-simplify-college.ts
+  4. 01-writing-simple-improve.ts
+  5. 02-writing-distill-and-condense.ts
+  6. 13-transpile-bulletpoints.ts
+  7. 14-transpile-summary.ts
+  8. source
+  9. 04-demographics-author-reader.ts
+  10. 05-demographics-reader.ts
+  11. 07-simplify-ignorant.ts
+  12. 16-experimental-diff-representation.ts
+  13. 11-role-saul-kahn.ts
+  14. 12-role-teacher.ts
+  15. 08-simplify-level6.ts
+  16. 15-experimental-ai-generated.ts
+  17. 10-role-carl-sagan.ts
+
+  Source: To encourage divergent thinking and foster customi ...
+  1. 03-writing-technical-improve.ts
+  2. 02-writing-distill-and-condense.ts
+  3. 13-transpile-bulletpoints.ts
+  4. 14-transpile-summary.ts
+  5. source
+  6. 09-simplify-level12.ts
+  7. 04-demographics-author-reader.ts
+  8. 01-writing-simple-improve.ts
+  9. 05-demographics-reader.ts
+  10. 06-simplify-college.ts
+  11. 07-simplify-ignorant.ts
+  12. 08-simplify-level6.ts
+  13. 15-experimental-ai-generated.ts
+  14. 12-role-teacher.ts
+  15. 16-experimental-diff-representation.ts
+  16. 10-role-carl-sagan.ts
+  17. 11-role-saul-kahn.ts
+  ```
+
+### Analysis
+
+**My familiarity with the content _greatly_ influenced which transformations won**
+
+My main takeaway from running this experiment is that there likely does not exist \*\*\*\*a single universal prompt that can be applied to every paper for optimal comprehensibility. That isn’t to say that there doesn’t exist some prompt that can improve the approachability of all or almost all writing, it’s just that it will almost certainly not be optimal.
+
+This is evidenced by the distinct split in prompt rankings depending on my familiarity with the subject matter. For instance, the top-scoring prompts for both of the CS papers (a subject I am familiar with) were ones that largely preserved the wording of the original source paragraph while cleaning and removing the overly verbose language you often find in research papers: `05-demographics-reader`, `02-writing-distill-and-condense`, `03-writing-technical-improve`, etc.
+
+On the other hand, for Math and Astrophysics (subjects that I am unfamiliar with) the top-scoring prompts were those that greatly simplified the language and concepts: `12-role-teacher`, `09-simplify-level12`, `06-simplify-college`, etc.
+
+Intuitively this seems obvious. For subjects where I already know most of the concepts, I don’t need them to be simplified. In fact, simplification can be frustrating since I perceive it as a loss of nuance (I **want** that fine-grained detail).
+
+Here’s an example (`03-writing-technical-improve`) for the HCI paper:
+
+- Source paragraph
+  To encourage divergent thinking and foster customization, educators can further generate variant scripts and utilize alternative prompts, expanding the possibilities for tailoring the output content to specific learning objectives.
+  Upon selecting an item in the Stickers panel, the current prompt associated with the chosen sticker is displayed in the Refine panel.
+  [Educators can edit the prompt and regenerate stickers to better fit the intended context, while simultaneously mitigating the risk of generating potentially inappropriate content].
+  Moreover, by leveraging varied themes and contexts, educators can create more engaging learning contents that not only reinforce vocabulary acquisition but also promote linguistic adaptability, as shown in Fig. 4. By offering a diverse array of learning materials, educators can stimulate more dynamic forms of vocabulary engagement and deepen learners’ connections with the language
+- Translation
+  To promote divergent thinking and customization, educators can create different scripts and use alternative prompts, broadening the potential to tailor content to specific learning objectives.
+  When an item is selected in the Stickers panel, the associated prompt is displayed in the Refine panel.
+  [Educators can modify the prompt and create new stickers to suit the context, reducing the risk of inappropriate content].
+  Additionally, using various themes and contexts, educators can make learning content more engaging, reinforcing vocabulary and promoting linguistic adaptability, as shown in Fig. 4. Providing a range of learning materials can encourage dynamic vocabulary engagement and strengthen learners’ language connections
+
+You can see that the changes aren’t nearly as drastic as the `12-role-teacher` example below. However, in my opinion, they’re still effective and create a more readable passage. The translation is 22% shorter (201 characters less) and makes simpler, more readable, language choices (e.g, educators can further generate variant scripts → educators can create different scripts).
+
+Note: I’ve highlighted the middle sentence because I wanted to call it out as potentially problematic. Arguably, the translation has changed the intended meaning of the sentence. In the source, it’s stated that the regeneration feature has two benefits: it can help make the sticker better for the intended context and it can help mitigate the risk of generating potentially inappropriate content. However, in the translation, its implied that regenerating the sticker to fix the context will itself reduce the risk of inappropriate content. Ultimately I argue that it doesn’t change the meaning enough to warrant throwing out the translation since the benefits of the regeneration are still accurately stated.
+
+For subjects I have limited background knowledge of, I need the information interpolated to a set of concepts and vocabulary I am familiar with.
+
+Here’s an example (`12-role-teacher`):
+
+- Source paragraph
+  The dispersal of a primordial planetesimal disk drives orbital evolution among the rest of the giant planets as well.
+  In Table 3, we list key parameters in the final architectures of the giant planets after 4 Gyrs of evolution.
+  In the first column we list the ratio of Saturn’s to Jupiter’s orbital period. In the real solar system, this ratio is ∼2.48, but our final simulated systems have a range of ratios spanning from 2.1–2.7, with a median value of 2.39.
+  Although the locations of various secular resonances depend on this exact ratio, this has dynamical consequences primarily for the inner solar system rather than the Kuiper belt (e.g. Brasser et al. 2009; Walsh & Morbidelli 2011; Clement et al. 2020).
+  However, the Kuiper belt’s architecture is dependent upon the ratio of Neptune’s to Uranus’ orbital period, and we list these final ratios for our systems in the second column of Table 3.
+  In our original simulations, all but one system (2500Pb) evolved above a period ratio of 2. Values in these original systems ranged from 1.97– 2.31, with a median of 2.13.
+  Consulting a large number of ∼1000-particle simulations from prior works (Clement et al. 2018, 2021c,a), we find roughly half of all 4-planet instability outcomes finish with a Neptune-to-Uranus period ratio of under 2, so it is not clear whether this is an unrealized systematic issue with our particular 5-planet resonant chain or whether it is simply an issue of bad luck among our 12 simulated systems.
+  Nevertheless, the crossing of Uranus and Neptune’s 2:1 MMR can destabilize much of the resonant Kuiper belt population, limiting the utility of our simulation results, and is therefore a poor feature for simulations meant to study Kuiper belt formation (Graham & Volk 2024).
+- Translation
+  Imagine a spinning disk of primordial planetesimals, the building blocks of planets. The way this disk disperses influences the orbital evolution of the giant planets in our solar system.
+  Let's take a look at Table 3, where we've noted some important factors in the final layouts of these giant planets after 4 billion years of evolution.
+  In the first column, we've noted the ratio of Saturn's orbital period to Jupiter's. In our actual solar system, this ratio is about 2.48. However, in our simulated systems, we've seen a range of ratios from 2.1 to 2.7, with an average value of 2.39.
+  While the exact ratio can affect the locations of various resonances, this primarily impacts the inner solar system, not the Kuiper belt.
+  Now, the structure of the Kuiper belt is influenced by the ratio of Neptune's orbital period to Uranus'. We've listed these final ratios for our systems in the second column of Table 3.
+  In our initial simulations, all but one system evolved above a period ratio of 2. The ratios in these initial systems ranged from 1.97 to 2.31, with an average of 2.13.
+  We've also looked at a large number of simulations from previous studies, and found that about half of all 4-planet instability outcomes end with a Neptune-to-Uranus period ratio of less than 2. It's unclear whether this is a systematic issue with our specific 5-planet resonant chain, or simply a matter of chance among our 12 simulated systems.
+  However, it's important to note that if Uranus and Neptune's orbits cross at a 2:1 ratio, it can destabilize much of the Kuiper belt population. This limits the usefulness of our simulation results and is therefore not a desirable feature for simulations meant to study the formation of the Kuiper belt
+
+If your astronomy is rusty, like mine, you’ll probably struggle through the source paragraph or need to look up some terminology. However, I expect that almost anyone with a high school degree should be able to read and (roughly) understand the translation.
+
+In comparison to the `03-writing-technical-improve` example, the translation is actually the same length as the source (longer if the citations are added back)! Clearly, the translation is offering more value than just removing superfluous language or simplifying diction (though that is happening). The second translation makes some key rewrites that, I argue, greatly improve the approachability of the paragraph without removing any important information.
+
+First, you can notice that the more advanced domain-specific language has been simplified or removed. For example, Gyr was turned into “billion years”. Additionally, more complex astronomical terminology was expanded upon. For example, “primordial planetesimal disk drives orbital evolution” was expanded to “Imagine a spinning disk of primordial planetesimals, the building blocks of planets. The way this disk disperses influences the orbital evolution of the giant planets in our solar system”.
+
+**There is a such thing as too simple.**
+
+The lossiest transformations were those that targeted the simplest reading levels. Even after asking GPT to preserve all meaning in the original paragraph, it still changed important aspects.
+
+For example, here’s the first sentence of the Astrophysics paragraph:
+
+```
+The dispersal of a primordial planetesimal disk drives orbital evolution among the rest of the giant planets as well
+```
+
+And here’s the transformation by `08-simplify-level6`
+
+```
+When a planet breaks apart, it can change the paths of other big planets too.
+```
+
+As well as `07-simplify-ignorant`
+
+```
+The movement of an early group of small planets can affect the paths of larger planets
+```
+
+Primordial planetesimal disks are not caused by planets breaking apart nor are they small planets. I can see why this substitution was made, but it’s objectively incorrect.
+
+I suspect this is a combination of the limitations of the model and the natural diction constraints imposed by the 6th-grade reading level requirement.
+
+On the whole, I found these unsuitable in the context of academic papers.
+
+**Reformatting or summarizing the text was less useful**
+
+On the whole, the transformations that formatted the text or summarized it were less useful than those that did _some_ sort of simplification. This is probably related more to the fact that the paragraphs were not long to begin with and not overly time-consuming to read (and re-read and re-read and re-read…). Subsequently, holding the entire context of the paragraph in my memory was not a supremely difficult task, which is typically when these kinds of transformations shine. If I’d been working with a lengthier text, I suspect these transformations would have scored higher.
+
+## Conclusion
+
+Hopefully, it’s obvious that running such a limited experiment on 1 person is not going to yield any sort of universal result. My intention was simply to get a tactile intuition for how different prompts would change the bodies of academic text.
+
+Yet, I think there are important takeaways from this exercise:
+
+1. The atomic approach to prompt building is an effective way to categorize and test different prompting strategies. I don’t think pairwise ranking is necessary, but you can build a good intuition about how different prompts affect free-form outputs from LLMs through this method.
+2. More prompts should be context-dependent. The most effective prompts are those that are situationally aware of the reader and their relationship to the material. Put another way, by taking into account the preexisting knowledge of the text consumer and the implicit requisite knowledge of the text content, you can craft a more effective prompt.
+
+In the future, I plan to experiment with chaining these prompts together to build more complex transformations.
+
+</Layout>
