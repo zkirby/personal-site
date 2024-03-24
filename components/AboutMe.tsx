@@ -1,10 +1,10 @@
 import { useSetAtom } from "jotai";
 import { RoughNotation } from "react-rough-notation";
 import React, { PropsWithChildren } from "react";
-import classnames from "classnames";
 
 import { laserEyesEnabledAtom } from "../state/sound.atoms";
 import Link from "next/link";
+import { cn } from "../lib/utils";
 
 function Highlight({
   href,
@@ -34,7 +34,7 @@ function Highlight({
 function Paragraph({ color, children }: PropsWithChildren<{ color?: "red" }>) {
   return (
     <p
-      className={classnames("mt-4 text-xl", {
+      className={cn("mt-4 text-xl", {
         "text-red-700": color === "red",
       })}
     >

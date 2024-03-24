@@ -1,5 +1,8 @@
 import { cn } from "../../lib/utils";
 
+/**
+ * `code` or ```code``` block.
+ */
 export default function Code({ inline = false, children }) {
   return (
     <code
