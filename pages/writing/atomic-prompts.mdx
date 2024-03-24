@@ -1,9 +1,16 @@
+import ReactDiffViewer, { DiffMethod } from "react-diff-viewer";
+
 import Layout from "@/components/writings/Layout";
-import Accordian from "@/components/writings/Accordian";
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "@/components/writings/Accordion";
 
 <Layout>
 
-# Atomic Prompts: A systematic method for exploring .
+# Atomic Prompts
 
 As part of my work on [Simple arXiv Viewer](https://github.com/zkirby/simple-arxiv-viewer) (SAV for short), I wanted to develop a prompt or set of prompts that would transform a paper to make it more approachable and comprehensible. I started with a shot-in-the-dark approach of coming up with random prompts I thought would do the trick but quickly found myself desiring something more systematic.
 
@@ -29,7 +36,16 @@ Next, I came up with a comprehensive set of base prompts. These were constructed
 
 I bucketed the prompts into a few categories
 
-<Accordian title="Writing Improvements">
+<Accordion type="single" collapsible>
+  <AccordionItem value="item-1">
+    <AccordionTrigger>Writing Improvements</AccordionTrigger>
+    <AccordionContent>
+      Yes. It adheres to the WAI-ARIA design pattern.
+    </AccordionContent>
+  </AccordionItem>
+</Accordion>
+
+<Accordion title="Writing Improvements">
   <ul>
     <li>
       <code>01-writing-simple-improvement</code>
@@ -52,7 +68,7 @@ I bucketed the prompts into a few categories
       </a>
     </li>
   </ul>
-</Accordian>
+</Accordion>
 
 - Writing Improvements - Simplify By Skill Level - `06-simplify-college` - Rewrite
   the passage for someone with a college reading level - `07-simplify-ignorant` - Rewrite
@@ -234,16 +250,21 @@ Intuitively this seems obvious. For subjects where I already know most of the co
 
 Here’s an example (`03-writing-technical-improve`) for the HCI paper:
 
-- Source paragraph
-  To encourage divergent thinking and foster customization, educators can further generate variant scripts and utilize alternative prompts, expanding the possibilities for tailoring the output content to specific learning objectives.
+<ReactDiffViewer
+  compareMethod={DiffMethod.WORDS}
+  oldValue={`To encourage divergent thinking and foster customization, educators can further generate variant scripts and utilize alternative prompts, expanding the possibilities for tailoring the output content to specific learning objectives.
   Upon selecting an item in the Stickers panel, the current prompt associated with the chosen sticker is displayed in the Refine panel.
   [Educators can edit the prompt and regenerate stickers to better fit the intended context, while simultaneously mitigating the risk of generating potentially inappropriate content].
-  Moreover, by leveraging varied themes and contexts, educators can create more engaging learning contents that not only reinforce vocabulary acquisition but also promote linguistic adaptability, as shown in Fig. 4. By offering a diverse array of learning materials, educators can stimulate more dynamic forms of vocabulary engagement and deepen learners’ connections with the language
-- Translation
-  To promote divergent thinking and customization, educators can create different scripts and use alternative prompts, broadening the potential to tailor content to specific learning objectives.
+  Moreover, by leveraging varied themes and contexts, educators can create more engaging learning contents that not only reinforce vocabulary acquisition but also promote linguistic adaptability, as shown in Fig. 4. By offering a diverse array of learning materials, educators can stimulate more dynamic forms of vocabulary engagement and deepen learners’ connections with the language`}
+  newValue={`To promote divergent thinking and customization, educators can create different scripts and use alternative prompts, broadening the potential to tailor content to specific learning objectives.
   When an item is selected in the Stickers panel, the associated prompt is displayed in the Refine panel.
   [Educators can modify the prompt and create new stickers to suit the context, reducing the risk of inappropriate content].
-  Additionally, using various themes and contexts, educators can make learning content more engaging, reinforcing vocabulary and promoting linguistic adaptability, as shown in Fig. 4. Providing a range of learning materials can encourage dynamic vocabulary engagement and strengthen learners’ language connections
+  Additionally, using various themes and contexts, educators can make learning content more engaging, reinforcing vocabulary and promoting linguistic adaptability, as shown in Fig. 4. Providing a range of learning materials can encourage dynamic vocabulary engagement and strengthen learners’ language connections`}
+  splitView
+  hideLineNumbers
+  leftTitle="Source"
+  rightTitle="Translation"
+/>
 
 You can see that the changes aren’t nearly as drastic as the `12-role-teacher` example below. However, in my opinion, they’re still effective and create a more readable passage. The translation is 22% shorter (201 characters less) and makes simpler, more readable, language choices (e.g, educators can further generate variant scripts → educators can create different scripts).
 
@@ -253,24 +274,29 @@ For subjects I have limited background knowledge of, I need the information inte
 
 Here’s an example (`12-role-teacher`):
 
-- Source paragraph
-  The dispersal of a primordial planetesimal disk drives orbital evolution among the rest of the giant planets as well.
+<ReactDiffViewer
+  compareMethod={DiffMethod.WORDS}
+  oldValue={`The dispersal of a primordial planetesimal disk drives orbital evolution among the rest of the giant planets as well.
   In Table 3, we list key parameters in the final architectures of the giant planets after 4 Gyrs of evolution.
   In the first column we list the ratio of Saturn’s to Jupiter’s orbital period. In the real solar system, this ratio is ∼2.48, but our final simulated systems have a range of ratios spanning from 2.1–2.7, with a median value of 2.39.
   Although the locations of various secular resonances depend on this exact ratio, this has dynamical consequences primarily for the inner solar system rather than the Kuiper belt (e.g. Brasser et al. 2009; Walsh & Morbidelli 2011; Clement et al. 2020).
   However, the Kuiper belt’s architecture is dependent upon the ratio of Neptune’s to Uranus’ orbital period, and we list these final ratios for our systems in the second column of Table 3.
   In our original simulations, all but one system (2500Pb) evolved above a period ratio of 2. Values in these original systems ranged from 1.97– 2.31, with a median of 2.13.
   Consulting a large number of ∼1000-particle simulations from prior works (Clement et al. 2018, 2021c,a), we find roughly half of all 4-planet instability outcomes finish with a Neptune-to-Uranus period ratio of under 2, so it is not clear whether this is an unrealized systematic issue with our particular 5-planet resonant chain or whether it is simply an issue of bad luck among our 12 simulated systems.
-  Nevertheless, the crossing of Uranus and Neptune’s 2:1 MMR can destabilize much of the resonant Kuiper belt population, limiting the utility of our simulation results, and is therefore a poor feature for simulations meant to study Kuiper belt formation (Graham & Volk 2024).
-- Translation
-  Imagine a spinning disk of primordial planetesimals, the building blocks of planets. The way this disk disperses influences the orbital evolution of the giant planets in our solar system.
+  Nevertheless, the crossing of Uranus and Neptune’s 2:1 MMR can destabilize much of the resonant Kuiper belt population, limiting the utility of our simulation results, and is therefore a poor feature for simulations meant to study Kuiper belt formation (Graham & Volk 2024).`}
+  newValue={`Imagine a spinning disk of primordial planetesimals, the building blocks of planets. The way this disk disperses influences the orbital evolution of the giant planets in our solar system.
   Let's take a look at Table 3, where we've noted some important factors in the final layouts of these giant planets after 4 billion years of evolution.
   In the first column, we've noted the ratio of Saturn's orbital period to Jupiter's. In our actual solar system, this ratio is about 2.48. However, in our simulated systems, we've seen a range of ratios from 2.1 to 2.7, with an average value of 2.39.
   While the exact ratio can affect the locations of various resonances, this primarily impacts the inner solar system, not the Kuiper belt.
   Now, the structure of the Kuiper belt is influenced by the ratio of Neptune's orbital period to Uranus'. We've listed these final ratios for our systems in the second column of Table 3.
   In our initial simulations, all but one system evolved above a period ratio of 2. The ratios in these initial systems ranged from 1.97 to 2.31, with an average of 2.13.
   We've also looked at a large number of simulations from previous studies, and found that about half of all 4-planet instability outcomes end with a Neptune-to-Uranus period ratio of less than 2. It's unclear whether this is a systematic issue with our specific 5-planet resonant chain, or simply a matter of chance among our 12 simulated systems.
-  However, it's important to note that if Uranus and Neptune's orbits cross at a 2:1 ratio, it can destabilize much of the Kuiper belt population. This limits the usefulness of our simulation results and is therefore not a desirable feature for simulations meant to study the formation of the Kuiper belt
+  However, it's important to note that if Uranus and Neptune's orbits cross at a 2:1 ratio, it can destabilize much of the Kuiper belt population. This limits the usefulness of our simulation results and is therefore not a desirable feature for simulations meant to study the formation of the Kuiper belt`}
+  splitView
+  hideLineNumbers
+  leftTitle="Source"
+  rightTitle="Translation"
+/>
 
 If your astronomy is rusty, like mine, you’ll probably struggle through the source paragraph or need to look up some terminology. However, I expect that almost anyone with a high school degree should be able to read and (roughly) understand the translation.
 

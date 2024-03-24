@@ -7,6 +7,11 @@ const ARTICLES = [
     path: "/writing/intra-language-translators",
   },
   {
+    title: "Atomic Prompts",
+    date: "03/22/24",
+    path: "/writing/atomic-prompts",
+  },
+  {
     title:
       "AI Parental Controls: Using LLMs for Context-Dependent Self-Moderation with Transformer.js",
     date: "03/18/24",

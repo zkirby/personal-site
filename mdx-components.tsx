@@ -1,5 +1,5 @@
 import type { MDXComponents } from "mdx/types";
-import cn from "classnames";
+import { cn } from "./lib/utils";
 
 const SPACING = "mb-3";
 const FONT = "font-body leading-relaxed text-lg";
