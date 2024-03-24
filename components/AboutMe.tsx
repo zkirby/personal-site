@@ -52,8 +52,11 @@ export default function AboutMe() {
           Thanks for stopping by. You won't find much here except a few details
           about what I'm up to and maybe some relevant links. Let's start with
           the links:{" "}
-          <Highlight href="/writing" internalLink>
+          {/* <Highlight href="/writing" internalLink>
             writings
+          </Highlight>{" "} */}
+          <Highlight href="https://www.linkedin.com/in/zkirby/">
+            linkedIn
           </Highlight>{" "}
           and <Highlight href="https://github.com/zkirby">github.</Highlight>
         </Paragraph>
@@ -66,13 +69,17 @@ export default function AboutMe() {
           ups and downs and some lefts and one right... but that's a story for
           another time.
         </Paragraph>
-        <Paragraph>
+        {/* <Paragraph>
           Right now, I'm keeping busy by{" "}
           <Highlight href="/writing/research" internalLink>
             exploring
           </Highlight>{" "}
           how AI can be used to augment human intelligence and enrich how we
           communicate with one another.
+        </Paragraph> */}
+        <Paragraph>
+          I'm currently open to new engineering roles. In particular, I'm
+          looking to work at a fast growing company working in the AI space.
         </Paragraph>
         <Paragraph>
           I have a general distaste for social media of any kind. I do, however,
