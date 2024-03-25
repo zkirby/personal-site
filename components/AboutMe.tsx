@@ -78,8 +78,8 @@ export default function AboutMe() {
           communicate with one another.
         </Paragraph> */}
         <Paragraph>
-          I'm currently open to new engineering roles. In particular, I'm
-          looking to work at a fast growing company working in the AI space.
+          I'm currently open to new engineering roles, especially at companies
+          in the AI space.
         </Paragraph>
         <Paragraph>
           I have a general distaste for social media of any kind. I do, however,
