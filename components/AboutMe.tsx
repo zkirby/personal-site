@@ -69,17 +69,10 @@ export default function AboutMe() {
           ups and downs and some lefts and one right... but that's a story for
           another time.
         </Paragraph>
-        {/* <Paragraph>
-          Right now, I'm keeping busy by{" "}
-          <Highlight href="/writing/research" internalLink>
-            exploring
-          </Highlight>{" "}
-          how AI can be used to augment human intelligence and enrich how we
-          communicate with one another.
-        </Paragraph> */}
         <Paragraph>
-          I'm currently open to new engineering roles, especially at companies
-          in the AI space.
+          Nowadays I'm working on ~AI~ agents at{" "}
+          <Highlight href="https://hex.tech/">Hex</Highlight> and loving it.
+          Check us out!
         </Paragraph>
         <Paragraph>
           I have a general distaste for social media of any kind. I do, however,
