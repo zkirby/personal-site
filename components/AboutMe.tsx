@@ -74,13 +74,6 @@ export default function AboutMe() {
           <Highlight href="https://hex.tech/">Hex</Highlight> and loving it.
           Check us out!
         </Paragraph>
-        <Paragraph>
-          I have a general distaste for social media of any kind. I do, however,
-          love to connect and exchange ideas with other people and will respond
-          to most (relevant) emails. You can{" "}
-          <Highlight href="mailto:zach@zkirby.com">contact</Highlight> me about
-          anything, assuming it isn't an unnecessary solicitation.
-        </Paragraph>
         <Paragraph color="red">- Zachary Kirby</Paragraph>
       </div>
     </div>
